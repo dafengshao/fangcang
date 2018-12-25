@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcang.spider.hotel.domain.mapper.FliggyCityDOMapper">
+
+
+	<!-- 通用查询结果列-->
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[
+			id,
+			region,
+			city_code AS cityCode,
+			display_name AS displayName,
+			suggest_name AS suggestName,
+			level,
+			level_display_name AS levelDisplayName
+			,mark
+		]]>
+	</sql>
+
+	<!-- 查询列来源表 -->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM fliggy_city]]></sql>
+
+
+
+	<!--全部条件(更多功能可以通过queryData扩展实现) -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+			<if test="id!=null "><![CDATA[AND id= #{id}]]></if>
+			<if test="region!=null "><![CDATA[AND region= #{region}]]></if>
+			<if test="cityCode!=null "><![CDATA[AND city_code= #{cityCode}]]></if>
+			<if test="displayName!=null "><![CDATA[AND display_name= #{displayName}]]></if>
+			<if test="suggestName!=null "><![CDATA[AND suggest_name= #{suggestName}]]></if>
+			<if test="level!=null "><![CDATA[AND level= #{level}]]></if>
+			<if test="levelDisplayName!=null "><![CDATA[AND level_display_name= #{levelDisplayName}]]></if>
+		</where>
+	</sql>
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->	<!-- 修 改-->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+			<if test="region!=null"><![CDATA[region = #{region},]]></if>
+			<if test="cityCode!=null"><![CDATA[city_code = #{cityCode},]]></if>
+			<if test="displayName!=null"><![CDATA[display_name = #{displayName},]]></if>
+			<if test="suggestName!=null"><![CDATA[suggest_name = #{suggestName},]]></if>
+			<if test="level!=null"><![CDATA[level = #{level},]]></if>
+			<if test="levelDisplayName!=null"><![CDATA[level_display_name = #{levelDisplayName},]]></if>
+		</set>
+	</sql>
+	<!-- 插入记录 -->
+	<insert id="insertSelective" parameterType="fliggyCityDO">
+			INSERT INTO fliggy_city
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="id!=null">id,</if>
+				<if test="region!=null">region,</if>
+				<if test="cityCode!=null">city_code,</if>
+				<if test="displayName!=null">display_name,</if>
+				<if test="suggestName!=null">suggest_name,</if>
+				<if test="level!=null">level,</if>
+				<if test="levelDisplayName!=null">level_display_name,</if>
+				<if test="mark!=null">mark,</if>
+			</trim>
+			<trim prefix="values (" suffix=")" suffixOverrides=",">
+				<if test="id!=null">#{id},</if>
+				<if test="region!=null">#{region},</if>
+				<if test="cityCode!=null">#{cityCode},</if>
+				<if test="displayName!=null">#{displayName},</if>
+				<if test="suggestName!=null">#{suggestName},</if>
+				<if test="level!=null">#{level},</if>
+				<if test="levelDisplayName!=null">#{levelDisplayName},</if>
+				<if test="mark!=null">#{mark},</if>
+			</trim>
+	</insert>
+
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 删除记录,主键IN(array)  -->
+	<delete id="deleteByArrayKey" parameterType="java.lang.reflect.Array">
+		 <![CDATA[DELETE FROM fliggy_city  WHERE id IN]]>
+		 <foreach collection="array" item="id" open="(" separator="," close=")">
+			 <![CDATA[#{id}]]>
+		</foreach>
+	</delete>
+
+	<!--删除,通过条件-->
+	<delete id="deleteByCondtion" parameterType="fliggyCityDO">
+		<![CDATA[DELETE FROM fliggy_city]]>
+			<include refid="QUERY_WHERE_CLAUSE"/>
+	</delete>
+
+	<!--删除,通过主键-->
+	<delete id="deleteByPrimaryKey" parameterType="fliggyCityDO">
+		 <![CDATA[DELETE FROM fliggy_city  WHERE id = #{id}]]>
+	</delete>
+
+	<!--修改记录通过主键-->
+	<update id="updateByPrimaryKeySelective" parameterType="fliggyCityDO">
+		<![CDATA[UPDATE fliggy_city]]>
+			<include refid="UPDATE_COLUMN_SET"/>
+			<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键==(key) -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long" resultType="fliggyCityDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id =#{id}]]>
+	</select>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="fliggyCityDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectEntryList" parameterType="fliggyCityDO" resultType="fliggyCityDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+	<!-- 总数查询,通过条件-->
+	<select id="selectEntryListCount" parameterType="fliggyCityDO" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+
+
+</mapper>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcang.spider.hotel.domain.mapper.AreaDOMapper">
+
+
+	<!-- 通用查询结果列-->
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[
+			id,
+			title,
+			code,
+			level,
+			suggest_name AS suggestName,
+			long_code AS longCode,
+			status_code AS statusCode,
+			mark
+		]]>
+	</sql>
+
+	<!-- 查询列来源表 -->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM area]]></sql>
+
+
+
+	<!--全部条件(更多功能可以通过queryData扩展实现) -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+			<if test="id!=null "><![CDATA[AND id= #{id}]]></if>
+			<if test="title!=null "><![CDATA[AND title= #{title}]]></if>
+			<if test="code!=null "><![CDATA[AND code= #{code}]]></if>
+			<if test="level!=null "><![CDATA[AND level= #{level}]]></if>
+			<if test="suggestName!=null "><![CDATA[AND suggest_name= #{suggestName}]]></if>
+			<if test="longCode!=null "><![CDATA[AND long_code= #{longCode}]]></if>
+			<if test="statusCode!=null "><![CDATA[AND status_code= #{statusCode}]]></if>
+			<if test="mark!=null "><![CDATA[AND mark= #{mark}]]></if>
+		</where>
+	</sql>
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->	<!-- 修 改-->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+			
+			<if test="title!=null"><![CDATA[title = #{title},]]></if>
+			<if test="code!=null"><![CDATA[code = #{code},]]></if>
+			<if test="level!=null"><![CDATA[level = #{level},]]></if>
+			<if test="suggestName!=null"><![CDATA[suggest_name = #{suggestName},]]></if>
+			<if test="longCode!=null"><![CDATA[long_code = #{longCode},]]></if>
+			<if test="statusCode!=null"><![CDATA[status_code = #{statusCode},]]></if>
+			<if test="mark!=null"><![CDATA[mark = #{mark},]]></if>
+		</set>
+	</sql>
+	<!-- 插入记录 -->
+	<insert id="insertSelective" parameterType="areaDO" useGeneratedKeys="true" keyProperty="id">
+			INSERT INTO area
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="id!=null">id,</if>
+				<if test="title!=null">title,</if>
+				<if test="code!=null">code,</if>
+				<if test="level!=null">level,</if>
+				<if test="suggestName!=null">suggest_name,</if>
+				<if test="longCode!=null">long_code,</if>
+				<if test="statusCode!=null">status_code,</if>
+				<if test="mark!=null">mark,</if>
+			</trim>
+			<trim prefix="values (" suffix=")" suffixOverrides=",">
+				<if test="id!=null">#{id},</if>
+				<if test="title!=null">#{title},</if>
+				<if test="code!=null">#{code},</if>
+				<if test="level!=null">#{level},</if>
+				<if test="suggestName!=null">#{suggestName},</if>
+				<if test="longCode!=null">#{longCode},</if>
+				<if test="statusCode!=null">#{statusCode},</if>
+				<if test="mark!=null">#{mark},</if>
+			</trim>
+	</insert>
+
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 删除记录,主键IN(array)  -->
+	<delete id="deleteByArrayKey" parameterType="java.lang.reflect.Array">
+		 <![CDATA[DELETE FROM area  WHERE id IN]]>
+		 <foreach collection="array" item="id" open="(" separator="," close=")">
+			 <![CDATA[#{id}]]>
+		</foreach>
+	</delete>
+
+	<!--删除,通过条件-->
+	<delete id="deleteByCondtion" parameterType="areaDO">
+		<![CDATA[DELETE FROM area]]>
+			<include refid="QUERY_WHERE_CLAUSE"/>
+	</delete>
+
+	<!--删除,通过主键-->
+	<delete id="deleteByPrimaryKey" parameterType="areaDO">
+		 <![CDATA[DELETE FROM area  WHERE id = #{id}]]>
+	</delete>
+
+	<!--修改记录通过主键-->
+	<update id="updateByPrimaryKeySelective" parameterType="areaDO">
+		<![CDATA[UPDATE area]]>
+			<include refid="UPDATE_COLUMN_SET"/>
+			<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键==(key) -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long" resultType="areaDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id =#{id}]]>
+	</select>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="areaDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectEntryList" parameterType="areaDO" resultType="areaDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+	<!-- 总数查询,通过条件-->
+	<select id="selectEntryListCount" parameterType="areaDO" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+
+
+</mapper>

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcang.spider.hotel.domain.mapper.CityHotelAssemDOMapper">
+
+
+	<!-- 通用查询结果列-->
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[
+			id,
+			request_type AS requestType,
+			request_url AS requestUrl,
+			reponse_status AS reponseStatus,
+			city_name AS cityName,
+			city_id AS cityId,
+			city_code AS cityCode,
+			reponse_content AS reponseContent,
+			current_page AS currentPage,
+			page_size AS pageSize,
+			mark,
+			update_time AS updateTime
+			,task_batch as taskBatch
+		]]>
+	</sql>
+
+	<!-- 查询列来源表 -->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM city_hotel_assem]]></sql>
+
+
+
+	<!--全部条件(更多功能可以通过queryData扩展实现) -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+			<if test="id!=null "><![CDATA[AND id= #{id}]]></if>
+			<if test="requestType!=null "><![CDATA[AND request_type= #{requestType}]]></if>
+			<if test="requestUrl!=null "><![CDATA[AND request_url= #{requestUrl}]]></if>
+			<if test="reponseStatus!=null "><![CDATA[AND reponse_status= #{reponseStatus}]]></if>
+			<if test="cityName!=null "><![CDATA[AND city_name= #{cityName}]]></if>
+			<if test="cityId!=null "><![CDATA[AND city_id= #{cityId}]]></if>
+			<if test="cityCode!=null "><![CDATA[AND city_code= #{cityCode}]]></if>
+			<if test="reponseContent!=null "><![CDATA[AND reponse_content= #{reponseContent}]]></if>
+			<if test="currentPage!=null "><![CDATA[AND current_page= #{currentPage}]]></if>
+			<if test="pageSize!=null "><![CDATA[AND page_size= #{pageSize}]]></if>
+			<if test="mark!=null "><![CDATA[AND mark= #{mark}]]></if>
+			<if test="updateTime!=null "><![CDATA[AND update_time= #{updateTime}]]></if>
+			<if test="taskBatch!=null "><![CDATA[AND task_batch= #{taskBatch}]]></if>
+		</where>
+	</sql>
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->	<!-- 修 改-->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+			<if test="requestType!=null"><![CDATA[request_type = #{requestType},]]></if>
+			<if test="requestUrl!=null"><![CDATA[request_url = #{requestUrl},]]></if>
+			<if test="reponseStatus!=null"><![CDATA[reponse_status = #{reponseStatus},]]></if>
+			<if test="cityName!=null"><![CDATA[city_name = #{cityName},]]></if>
+			<if test="cityId!=null"><![CDATA[city_id = #{cityId},]]></if>
+			<if test="cityCode!=null"><![CDATA[city_code = #{cityCode},]]></if>
+			<if test="reponseContent!=null"><![CDATA[reponse_content = #{reponseContent},]]></if>
+			<if test="currentPage!=null"><![CDATA[current_page = #{currentPage},]]></if>
+			<if test="pageSize!=null"><![CDATA[page_size = #{pageSize},]]></if>
+			<if test="mark!=null"><![CDATA[mark = #{mark},]]></if>
+			<if test="updateTime!=null"><![CDATA[update_time = #{updateTime},]]></if>
+			<if test="taskBatch!=null "><![CDATA[task_batch= #{taskBatch},]]></if>
+		</set>
+	</sql>
+	<!-- 插入记录 -->
+	<insert id="insertSelective" parameterType="cityHotelAssemDO" useGeneratedKeys="true" keyProperty="id">
+			INSERT INTO city_hotel_assem
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="requestType!=null">request_type,</if>
+				<if test="requestUrl!=null">request_url,</if>
+				<if test="reponseStatus!=null">reponse_status,</if>
+				<if test="cityName!=null">city_name,</if>
+				<if test="cityId!=null">city_id,</if>
+				<if test="cityCode!=null">city_code,</if>
+				<if test="reponseContent!=null">reponse_content,</if>
+				<if test="currentPage!=null">current_page,</if>
+				<if test="pageSize!=null">page_size,</if>
+				<if test="mark!=null">mark,</if>
+				<if test="updateTime!=null">update_time,</if>
+				<if test="taskBatch!=null">task_batch,</if>
+			</trim>
+			<trim prefix="values (" suffix=")" suffixOverrides=",">
+				<if test="requestType!=null">#{requestType},</if>
+				<if test="requestUrl!=null">#{requestUrl},</if>
+				<if test="reponseStatus!=null">#{reponseStatus},</if>
+				<if test="cityName!=null">#{cityName},</if>
+				<if test="cityId!=null">#{cityId},</if>
+				<if test="cityCode!=null">#{cityCode},</if>
+				<if test="reponseContent!=null">#{reponseContent},</if>
+				<if test="currentPage!=null">#{currentPage},</if>
+				<if test="pageSize!=null">#{pageSize},</if>
+				<if test="mark!=null">#{mark},</if>
+				<if test="updateTime!=null">#{updateTime},</if>
+				<if test="taskBatch!=null"><![CDATA[#{taskBatch},]]></if>
+			</trim>
+	</insert>
+
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 删除记录,主键IN(array)  -->
+	<delete id="deleteByArrayKey" parameterType="java.lang.reflect.Array">
+		 <![CDATA[DELETE FROM city_hotel_assem  WHERE id IN]]>
+		 <foreach collection="array" item="id" open="(" separator="," close=")">
+			 <![CDATA[#{id}]]>
+		</foreach>
+	</delete>
+
+	<!--删除,通过条件-->
+	<delete id="deleteByCondtion" parameterType="cityHotelAssemDO">
+		<![CDATA[DELETE FROM city_hotel_assem]]>
+			<include refid="QUERY_WHERE_CLAUSE"/>
+	</delete>
+
+	<!--删除,通过主键-->
+	<delete id="deleteByPrimaryKey" parameterType="cityHotelAssemDO">
+		 <![CDATA[DELETE FROM city_hotel_assem  WHERE id = #{id}]]>
+	</delete>
+
+	<!--修改记录通过主键-->
+	<update id="updateByPrimaryKeySelective" parameterType="cityHotelAssemDO">
+		<![CDATA[UPDATE city_hotel_assem]]>
+			<include refid="UPDATE_COLUMN_SET"/>
+			<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键==(key) -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long" resultType="cityHotelAssemDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id =#{id}]]>
+	</select>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="cityHotelAssemDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectEntryList" parameterType="cityHotelAssemDO" resultType="cityHotelAssemDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+	<!-- 总数查询,通过条件-->
+	<select id="selectEntryListCount" parameterType="cityHotelAssemDO" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+
+
+</mapper>

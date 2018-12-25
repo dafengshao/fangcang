@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.fcang.spider</groupId>
+		<artifactId>hotel-spider</artifactId>
+        <version>0.1.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>hotel-spider-domain</artifactId>
+	
+    <dependencies>
+       
+          <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-lgpl</artifactId>
+        </dependency>
+         <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+         <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+            </dependency>
+            <!-- mybatis -->
+        <dependency>
+      		<groupId>org.mybatis</groupId>
+      		<artifactId>mybatis</artifactId>
+      		<version>3.4.4</version>
+    	</dependency>
+    	<dependency>  
+		    <groupId>org.mybatis</groupId>  
+		    <artifactId>mybatis-typehandlers-jsr310</artifactId>  
+		    <version>1.0.1</version>  
+		</dependency> 
+    	<dependency>
+        	<groupId>org.mybatis</groupId>
+        	<artifactId>mybatis-spring</artifactId>
+        	<version>1.3.1</version>
+      	</dependency>
+      	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		 <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+		<dependency>
+			 <groupId>com.github.pagehelper</groupId>
+		    <artifactId>pagehelper</artifactId>
+		    <version>5.1.2</version>
+		</dependency>
+      	<!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-beans</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-context</artifactId>
+		</dependency>
+				
+		      	
+    </dependencies>
+    
+    
+    <build>
+		<plugins>
+		    <plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-deploy-plugin</artifactId>
+		        <version>2.8.2</version>
+		        <configuration>
+		            <skip>true</skip> 
+		        </configuration>
+		    </plugin>
+		</plugins>
+		<resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>*.xml</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.Filter</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+    
+	
+</project>

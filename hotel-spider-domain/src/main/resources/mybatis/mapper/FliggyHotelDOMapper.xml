@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcang.spider.hotel.domain.mapper.FliggyHotelDOMapper">
+
+
+	<!-- 通用查询结果列-->
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[
+			id,
+			title,
+			city_id AS cityId,
+			city_code AS cityCode,
+			city,
+			credit_icon AS creditIcon,
+			original_url AS originalUrl,
+			business_area AS businessArea,
+			address,
+			star,
+			star_info AS starInfo,
+			price,
+			price_info AS priceInfo,
+			price_lg AS priceLg,
+			score_estimate AS scoreEstimate,
+			comment_volume AS commentVolume,
+			score_value AS scoreValue,
+			status_code AS statusCode,
+			html_content AS htmlContent,
+			mark,
+			update_time AS updateTime,
+			hotel_assem_id AS hotelAssemId
+			,brand
+		]]>
+	</sql>
+
+	<!-- 查询列来源表 -->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM fliggy_hotel]]></sql>
+
+
+
+	<!--全部条件(更多功能可以通过queryData扩展实现) -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+			<if test="id!=null "><![CDATA[AND id= #{id}]]></if>
+			<if test="title!=null "><![CDATA[AND title= #{title}]]></if>
+			<if test="cityId!=null "><![CDATA[AND city_id= #{cityId}]]></if>
+			<if test="cityCode!=null "><![CDATA[AND city_code= #{cityCode}]]></if>
+			<if test="city!=null "><![CDATA[AND city= #{city}]]></if>
+			<if test="creditIcon!=null "><![CDATA[AND credit_icon= #{creditIcon}]]></if>
+			<if test="originalUrl!=null "><![CDATA[AND original_url= #{originalUrl}]]></if>
+			<if test="businessArea!=null "><![CDATA[AND business_area= #{businessArea}]]></if>
+			<if test="address!=null "><![CDATA[AND address= #{address}]]></if>
+			<if test="star!=null "><![CDATA[AND star= #{star}]]></if>
+			<if test="starInfo!=null "><![CDATA[AND star_info= #{starInfo}]]></if>
+			<if test="price!=null "><![CDATA[AND price= #{price}]]></if>
+			<if test="priceInfo!=null "><![CDATA[AND price_info= #{priceInfo}]]></if>
+			<if test="priceLg!=null "><![CDATA[AND price_lg= #{priceLg}]]></if>
+			<if test="scoreEstimate!=null "><![CDATA[AND score_estimate= #{scoreEstimate}]]></if>
+			<if test="commentVolume!=null "><![CDATA[AND comment_volume= #{commentVolume}]]></if>
+			<if test="scoreValue!=null "><![CDATA[AND score_value= #{scoreValue}]]></if>
+			<if test="statusCode!=null "><![CDATA[AND status_code= #{statusCode}]]></if>
+			<if test="htmlContent!=null "><![CDATA[AND html_content= #{htmlContent}]]></if>
+			<if test="mark!=null "><![CDATA[AND mark= #{mark}]]></if>
+			<if test="updateTime!=null "><![CDATA[AND update_time= #{updateTime}]]></if>
+			<if test="hotelAssemId!=null "><![CDATA[AND hotel_assem_id= #{hotelAssemId}]]></if>
+			<if test="brand!=null "><![CDATA[AND brand= #{brand}]]></if>
+		</where>
+	</sql>
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->	<!-- 修 改-->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+			<if test="title!=null"><![CDATA[title = #{title},]]></if>
+			<if test="cityId!=null"><![CDATA[city_id = #{cityId},]]></if>
+			<if test="cityCode!=null"><![CDATA[city_code = #{cityCode},]]></if>
+			<if test="city!=null"><![CDATA[city = #{city},]]></if>
+			<if test="creditIcon!=null"><![CDATA[credit_icon = #{creditIcon},]]></if>
+			<if test="originalUrl!=null"><![CDATA[original_url = #{originalUrl},]]></if>
+			<if test="businessArea!=null"><![CDATA[business_area = #{businessArea},]]></if>
+			<if test="address!=null"><![CDATA[address = #{address},]]></if>
+			<if test="star!=null"><![CDATA[star = #{star},]]></if>
+			<if test="starInfo!=null"><![CDATA[star_info = #{starInfo},]]></if>
+			<if test="price!=null"><![CDATA[price = #{price},]]></if>
+			<if test="priceInfo!=null"><![CDATA[price_info = #{priceInfo},]]></if>
+			<if test="priceLg!=null"><![CDATA[price_lg = #{priceLg},]]></if>
+			<if test="scoreEstimate!=null"><![CDATA[score_estimate = #{scoreEstimate},]]></if>
+			<if test="commentVolume!=null"><![CDATA[comment_volume = #{commentVolume},]]></if>
+			<if test="scoreValue!=null"><![CDATA[score_value = #{scoreValue},]]></if>
+			<if test="statusCode!=null"><![CDATA[status_code = #{statusCode},]]></if>
+			<if test="htmlContent!=null"><![CDATA[html_content = #{htmlContent},]]></if>
+			<if test="mark!=null"><![CDATA[mark = #{mark},]]></if>
+			<if test="updateTime!=null"><![CDATA[update_time = #{updateTime},]]></if>
+			<if test="hotelAssemId!=null"><![CDATA[hotel_assem_id = #{hotelAssemId},]]></if>
+			<if test="brand!=null "><![CDATA[brand= #{brand},]]></if>
+		</set>
+	</sql>
+	<!-- 插入记录 -->
+	<insert id="insertSelective" parameterType="fliggyHotelDO" useGeneratedKeys="true" keyProperty="id">
+			INSERT INTO fliggy_hotel
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="id!=null">id,</if>
+				<if test="title!=null">title,</if>
+				<if test="cityId!=null">city_id,</if>
+				<if test="cityCode!=null">city_code,</if>
+				<if test="city!=null">city,</if>
+				<if test="creditIcon!=null">credit_icon,</if>
+				<if test="originalUrl!=null">original_url,</if>
+				<if test="businessArea!=null">business_area,</if>
+				<if test="address!=null">address,</if>
+				<if test="star!=null">star,</if>
+				<if test="starInfo!=null">star_info,</if>
+				<if test="price!=null">price,</if>
+				<if test="priceInfo!=null">price_info,</if>
+				<if test="priceLg!=null">price_lg,</if>
+				<if test="scoreEstimate!=null">score_estimate,</if>
+				<if test="commentVolume!=null">comment_volume,</if>
+				<if test="scoreValue!=null">score_value,</if>
+				<if test="statusCode!=null">status_code,</if>
+				<if test="htmlContent!=null">html_content,</if>
+				<if test="mark!=null">mark,</if>
+				<if test="updateTime!=null">update_time,</if>
+				<if test="hotelAssemId!=null">hotel_assem_id,</if>
+				<if test="brand!=null"><![CDATA[brand,]]></if>
+			</trim>
+			<trim prefix="values (" suffix=")" suffixOverrides=",">
+				<if test="id!=null">#{id},</if>
+				<if test="title!=null">#{title},</if>
+				<if test="cityId!=null">#{cityId},</if>
+				<if test="cityCode!=null">#{cityCode},</if>
+				<if test="city!=null">#{city},</if>
+				<if test="creditIcon!=null">#{creditIcon},</if>
+				<if test="originalUrl!=null">#{originalUrl},</if>
+				<if test="businessArea!=null">#{businessArea},</if>
+				<if test="address!=null">#{address},</if>
+				<if test="star!=null">#{star},</if>
+				<if test="starInfo!=null">#{starInfo},</if>
+				<if test="price!=null">#{price},</if>
+				<if test="priceInfo!=null">#{priceInfo},</if>
+				<if test="priceLg!=null">#{priceLg},</if>
+				<if test="scoreEstimate!=null">#{scoreEstimate},</if>
+				<if test="commentVolume!=null">#{commentVolume},</if>
+				<if test="scoreValue!=null">#{scoreValue},</if>
+				<if test="statusCode!=null">#{statusCode},</if>
+				<if test="htmlContent!=null">#{htmlContent},</if>
+				<if test="mark!=null">#{mark},</if>
+				<if test="updateTime!=null">#{updateTime},</if>
+				<if test="hotelAssemId!=null">#{hotelAssemId},</if>
+				<if test="brand!=null"><![CDATA[ #{brand},]]></if>
+			</trim>
+	</insert>
+
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 删除记录,主键IN(array)  -->
+	<delete id="deleteByArrayKey" parameterType="java.lang.reflect.Array">
+		 <![CDATA[DELETE FROM fliggy_hotel  WHERE id IN]]>
+		 <foreach collection="array" item="id" open="(" separator="," close=")">
+			 <![CDATA[#{id}]]>
+		</foreach>
+	</delete>
+
+	<!--删除,通过条件-->
+	<delete id="deleteByCondtion" parameterType="fliggyHotelDO">
+		<![CDATA[DELETE FROM fliggy_hotel]]>
+			<include refid="QUERY_WHERE_CLAUSE"/>
+	</delete>
+
+	<!--删除,通过主键-->
+	<delete id="deleteByPrimaryKey" parameterType="fliggyHotelDO">
+		 <![CDATA[DELETE FROM fliggy_hotel  WHERE id = #{id}]]>
+	</delete>
+
+	<!--修改记录通过主键-->
+	<update id="updateByPrimaryKeySelective" parameterType="fliggyHotelDO">
+		<![CDATA[UPDATE fliggy_hotel]]>
+			<include refid="UPDATE_COLUMN_SET"/>
+			<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键==(key) -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long" resultType="fliggyHotelDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id =#{id}]]>
+	</select>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="fliggyHotelDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectEntryList" parameterType="fliggyHotelDO" resultType="fliggyHotelDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+	<!-- 总数查询,通过条件-->
+	<select id="selectEntryListCount" parameterType="fliggyHotelDO" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+
+
+</mapper>

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcang.spider.hotel.domain.mapper.CtripHotelInfoDOMapper">
+
+
+	<!-- 通用查询结果列-->
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[
+			,
+			name_ch AS nameCh,
+			original_id AS originalId,
+			original_url AS originalUrl,
+			original_page AS originalPage,
+			city,
+			selection,
+			hotel_ico AS hotelIco,
+			htladdress,
+			zonenames,
+			special_label AS specialLabel,
+			icon_list AS iconList,
+			hotel_level AS hotelLevel,
+			hotel_value AS hotelValue,
+			total_judgement_score AS totalJudgementScore,
+			judgement,
+			recommend,
+			price_low AS priceLow,
+			giftcard_available AS giftcardAvailable,
+			city_id AS cityId,
+			city_code AS cityCode,
+			province,
+			hotel_res AS hotelRes,
+			create_time AS createTime,
+			update_time AS updateTime
+			,mark
+		]]>
+	</sql>
+
+	<!-- 查询列来源表 -->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM ctrip_hotel_info]]></sql>
+
+
+
+	<!--全部条件(更多功能可以通过queryData扩展实现) -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+			<if test="!=null "><![CDATA[AND = #{}]]></if>
+			<if test="nameCh!=null "><![CDATA[AND name_ch= #{nameCh}]]></if>
+			<if test="originalId!=null "><![CDATA[AND original_id= #{originalId}]]></if>
+			<if test="originalUrl!=null "><![CDATA[AND original_url= #{originalUrl}]]></if>
+			<if test="originalPage!=null "><![CDATA[AND original_page= #{originalPage}]]></if>
+			<if test="city!=null "><![CDATA[AND city= #{city}]]></if>
+			<if test="selection!=null "><![CDATA[AND selection= #{selection}]]></if>
+			<if test="hotelIco!=null "><![CDATA[AND hotel_ico= #{hotelIco}]]></if>
+			<if test="htladdress!=null "><![CDATA[AND htladdress= #{htladdress}]]></if>
+			<if test="zonenames!=null "><![CDATA[AND zonenames= #{zonenames}]]></if>
+			<if test="specialLabel!=null "><![CDATA[AND special_label= #{specialLabel}]]></if>
+			<if test="iconList!=null "><![CDATA[AND icon_list= #{iconList}]]></if>
+			<if test="hotelLevel!=null "><![CDATA[AND hotel_level= #{hotelLevel}]]></if>
+			<if test="hotelValue!=null "><![CDATA[AND hotel_value= #{hotelValue}]]></if>
+			<if test="totalJudgementScore!=null "><![CDATA[AND total_judgement_score= #{totalJudgementScore}]]></if>
+			<if test="judgement!=null "><![CDATA[AND judgement= #{judgement}]]></if>
+			<if test="recommend!=null "><![CDATA[AND recommend= #{recommend}]]></if>
+			<if test="priceLow!=null "><![CDATA[AND price_low= #{priceLow}]]></if>
+			<if test="giftcardAvailable!=null "><![CDATA[AND giftcard_available= #{giftcardAvailable}]]></if>
+			<if test="cityId!=null "><![CDATA[AND city_id= #{cityId}]]></if>
+			<if test="cityCode!=null "><![CDATA[AND city_code= #{cityCode}]]></if>
+			<if test="province!=null "><![CDATA[AND province= #{province}]]></if>
+			<if test="hotelRes!=null "><![CDATA[AND hotel_res= #{hotelRes}]]></if>
+			<if test="createTime!=null "><![CDATA[AND create_time= #{createTime}]]></if>
+			<if test="updateTime!=null "><![CDATA[AND update_time= #{updateTime}]]></if>
+			<if test="mark!=null"><![CDATA[AND mark= #{mark}]]></if>
+		</where>
+	</sql>
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->	<!-- 修 改-->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+			<if test="nameCh!=null"><![CDATA[name_ch = #{nameCh},]]></if>
+			<if test="originalId!=null"><![CDATA[original_id = #{originalId},]]></if>
+			<if test="originalUrl!=null"><![CDATA[original_url = #{originalUrl},]]></if>
+			<if test="originalPage!=null"><![CDATA[original_page = #{originalPage},]]></if>
+			<if test="city!=null"><![CDATA[city = #{city},]]></if>
+			<if test="selection!=null"><![CDATA[selection = #{selection},]]></if>
+			<if test="hotelIco!=null"><![CDATA[hotel_ico = #{hotelIco},]]></if>
+			<if test="htladdress!=null"><![CDATA[htladdress = #{htladdress},]]></if>
+			<if test="zonenames!=null"><![CDATA[zonenames = #{zonenames},]]></if>
+			<if test="specialLabel!=null"><![CDATA[special_label = #{specialLabel},]]></if>
+			<if test="iconList!=null"><![CDATA[icon_list = #{iconList},]]></if>
+			<if test="hotelLevel!=null"><![CDATA[hotel_level = #{hotelLevel},]]></if>
+			<if test="hotelValue!=null"><![CDATA[hotel_value = #{hotelValue},]]></if>
+			<if test="totalJudgementScore!=null"><![CDATA[total_judgement_score = #{totalJudgementScore},]]></if>
+			<if test="judgement!=null"><![CDATA[judgement = #{judgement},]]></if>
+			<if test="recommend!=null"><![CDATA[recommend = #{recommend},]]></if>
+			<if test="priceLow!=null"><![CDATA[price_low = #{priceLow},]]></if>
+			<if test="giftcardAvailable!=null"><![CDATA[giftcard_available = #{giftcardAvailable},]]></if>
+			<if test="cityId!=null"><![CDATA[city_id = #{cityId},]]></if>
+			<if test="cityCode!=null"><![CDATA[city_code = #{cityCode},]]></if>
+			<if test="province!=null"><![CDATA[province = #{province},]]></if>
+			<if test="hotelRes!=null"><![CDATA[hotel_res = #{hotelRes},]]></if>
+			<if test="createTime!=null"><![CDATA[create_time = #{createTime},]]></if>
+			<if test="updateTime!=null"><![CDATA[update_time = #{updateTime},]]></if>
+			<if test="mark!=null"><![CDATA[mark= #{mark},]]></if>
+		</set>
+	</sql>
+	<!-- 插入记录 -->
+	<insert id="insertSelective" parameterType="ctripHotelInfoDO" useGeneratedKeys="true" keyProperty="">
+			INSERT INTO ctrip_hotel_info
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="nameCh!=null">name_ch,</if>
+				<if test="originalId!=null">original_id,</if>
+				<if test="originalUrl!=null">original_url,</if>
+				<if test="originalPage!=null">original_page,</if>
+				<if test="city!=null">city,</if>
+				<if test="selection!=null">selection,</if>
+				<if test="hotelIco!=null">hotel_ico,</if>
+				<if test="htladdress!=null">htladdress,</if>
+				<if test="zonenames!=null">zonenames,</if>
+				<if test="specialLabel!=null">special_label,</if>
+				<if test="iconList!=null">icon_list,</if>
+				<if test="hotelLevel!=null">hotel_level,</if>
+				<if test="hotelValue!=null">hotel_value,</if>
+				<if test="totalJudgementScore!=null">total_judgement_score,</if>
+				<if test="judgement!=null">judgement,</if>
+				<if test="recommend!=null">recommend,</if>
+				<if test="priceLow!=null">price_low,</if>
+				<if test="giftcardAvailable!=null">giftcard_available,</if>
+				<if test="cityId!=null">city_id,</if>
+				<if test="cityCode!=null">city_code,</if>
+				<if test="province!=null">province,</if>
+				<if test="hotelRes!=null">hotel_res,</if>
+				<if test="createTime!=null">create_time,</if>
+				<if test="updateTime!=null">update_time,</if>
+				<if test="mark!=null">mark,</if>
+			</trim>
+			<trim prefix="values (" suffix=")" suffixOverrides=",">
+				<if test="nameCh!=null">#{nameCh},</if>
+				<if test="originalId!=null">#{originalId},</if>
+				<if test="originalUrl!=null">#{originalUrl},</if>
+				<if test="originalPage!=null">#{originalPage},</if>
+				<if test="city!=null">#{city},</if>
+				<if test="selection!=null">#{selection},</if>
+				<if test="hotelIco!=null">#{hotelIco},</if>
+				<if test="htladdress!=null">#{htladdress},</if>
+				<if test="zonenames!=null">#{zonenames},</if>
+				<if test="specialLabel!=null">#{specialLabel},</if>
+				<if test="iconList!=null">#{iconList},</if>
+				<if test="hotelLevel!=null">#{hotelLevel},</if>
+				<if test="hotelValue!=null">#{hotelValue},</if>
+				<if test="totalJudgementScore!=null">#{totalJudgementScore},</if>
+				<if test="judgement!=null">#{judgement},</if>
+				<if test="recommend!=null">#{recommend},</if>
+				<if test="priceLow!=null">#{priceLow},</if>
+				<if test="giftcardAvailable!=null">#{giftcardAvailable},</if>
+				<if test="cityId!=null">#{cityId},</if>
+				<if test="cityCode!=null">#{cityCode},</if>
+				<if test="province!=null">#{province},</if>
+				<if test="hotelRes!=null">#{hotelRes},</if>
+				<if test="createTime!=null">#{createTime},</if>
+				<if test="updateTime!=null">#{updateTime},</if>
+				<if test="mark!=null">#{mark},</if>
+			</trim>
+	</insert>
+
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 删除记录,主键IN(array)  -->
+	<delete id="deleteByArrayKey" parameterType="java.lang.reflect.Array">
+		 <![CDATA[DELETE FROM ctrip_hotel_info  WHERE id IN]]>
+		 <foreach collection="array" item="id" open="(" separator="," close=")">
+			 <![CDATA[#{id}]]>
+		</foreach>
+	</delete>
+
+	<!--删除,通过条件-->
+	<delete id="deleteByCondtion" parameterType="ctripHotelInfoDO">
+		<![CDATA[DELETE FROM ctrip_hotel_info]]>
+			<include refid="QUERY_WHERE_CLAUSE"/>
+	</delete>
+
+	<!--删除,通过主键-->
+	<delete id="deleteByPrimaryKey" parameterType="ctripHotelInfoDO">
+		 <![CDATA[DELETE FROM ctrip_hotel_info  WHERE id = #{id}]]>
+	</delete>
+
+	<!--修改记录通过主键-->
+	<update id="updateByPrimaryKeySelective" parameterType="ctripHotelInfoDO">
+		<![CDATA[UPDATE ctrip_hotel_info]]>
+			<include refid="UPDATE_COLUMN_SET"/>
+			<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键==(key) -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long" resultType="ctripHotelInfoDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id =#{id}]]>
+	</select>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="ctripHotelInfoDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectEntryList" parameterType="ctripHotelInfoDO" resultType="ctripHotelInfoDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+	<!-- 总数查询,通过条件-->
+	<select id="selectEntryListCount" parameterType="ctripHotelInfoDO" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+
+
+</mapper>

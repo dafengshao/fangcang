@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD  Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<!-- 全局映射器启用缓存 -->
+		<setting name="cacheEnabled" value="true" />
+		<!-- 对于未知的SQL查询，允许返回不同的结果集以达到通用的效果 -->
+		<setting name="multipleResultSetsEnabled" value="true" />
+		<!-- 允许使用列标签代替列名 -->
+		<setting name="useColumnLabel" value="true" />
+		<!-- 数据库超过30秒仍未响应则超时 -->
+		<setting name="defaultStatementTimeout" value="30" />
+		<!-- 启用下划线与驼峰式命名规则的映射 -->
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
+	<typeAliases>
+		<typeAlias type="com.fcang.spider.hotel.domain.pojo.CtripHotelInfoDO" alias="ctripHotelInfoDO"/>
+		<typeAlias type="com.fcang.spider.hotel.domain.pojo.CtripHotelPricePlanDO" alias="ctripHotelPricePlanDO"/>
+		<typeAlias type="com.fcang.spider.hotel.domain.pojo.CtripHotelRoomDO" alias="ctripHotelRoomDO"/>
+		<typeAlias type="com.fcang.spider.hotel.domain.pojo.CtripCityDO" alias="ctripCityDO"/>
+		<typeAlias type="com.fcang.spider.hotel.domain.pojo.FliggyCityDO" alias="fliggyCityDO"/>
+		<typeAlias type="com.fcang.spider.hotel.domain.pojo.AreaDO" alias="areaDO"/>
+		<typeAlias type="com.fcang.spider.hotel.domain.pojo.FliggyHotelDO" alias="fliggyHotelDO"/>
+		<typeAlias type="com.fcang.spider.hotel.domain.pojo.CityHotelAssemDO" alias="cityHotelAssemDO"/>
+	</typeAliases>
+	 <plugins>
+        <!-- com.github.pagehelper为PageHelper类所在包名 -->
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+        </plugin>
+    </plugins>
+</configuration>

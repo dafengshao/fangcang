@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+	<property name="ABSOLUTE_PATH" 
+		value="./logs/" />
+
+<!-- 	<include resource="logback-application.xml" /> -->
+
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>
+				%date{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="launchAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${ABSOLUTE_PATH}/error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+	      <!-- rollover daily -->
+	      <fileNamePattern>${ABSOLUTE_PATH}/his/%d{yyyy-MM}/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+	       <!-- each file should be at most 100MB, keep 60 days worth of history, but at most 20GB -->
+	       <maxFileSize>20MB</maxFileSize>    
+	       <maxHistory>60</maxHistory>
+	       <totalSizeCap>10GB</totalSizeCap>
+	    </rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
+			</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+
+	<appender name="sqlLaunchAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${ABSOLUTE_PATH}/sql.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+	      <!-- rollover daily -->
+	      <fileNamePattern>${ABSOLUTE_PATH}/his/%d{yyyy-MM-dd}/sql.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+	       <!-- each file should be at most 100MB, keep 60 days worth of history, but at most 20GB -->
+	       <maxFileSize>30MB</maxFileSize>    
+	       <maxHistory>60</maxHistory>
+	       <totalSizeCap>10GB</totalSizeCap>
+	    </rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="applicationAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${ABSOLUTE_PATH}/application.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+	      <!-- rollover daily -->
+	      <fileNamePattern>${ABSOLUTE_PATH}/his/%d{yyyy-MM}/application.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+	       <!-- each file should be at most 100MB, keep 60 days worth of history, but at most 20GB -->
+	       <maxFileSize>20MB</maxFileSize>    
+	       <maxHistory>60</maxHistory>
+	       <totalSizeCap>10GB</totalSizeCap>
+	    </rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+
+	<logger name="com.fcang.spider" level="INFO" additivity="true">
+		<appender-ref ref="applicationAppender" />
+	</logger>
+	
+	<!-- <logger name="com.fcang.spider.hotel.provider.biz.FliggyHotelListSpiderBiz" level="WARN" additivity="true">
+		<appender-ref ref="FliggyHotelListSpiderBizAppender" />
+	</logger> -->
+	<logger name="com.fcang.spider.hotel.domain.mapper" level="DEBUG" 
+	additivity="true">
+		<appender-ref ref="sqlLaunchAppender" />
+	</logger>
+	
+	
+
+	<root level="WARN"  >
+		<!-- <appender-ref ref="sqlLaunchAppender" /> -->
+		<appender-ref ref="launchAppender" />
+		<appender-ref ref="console" />
+	</root>
+
+</configuration>
+
+<!-- 
+ip：39.108.73.131
+服务器账号/密码：fangmin/fangmin159357
+目录：/usr
+数据库：
+端口：3306
+用户密码：pachong/fdsa3@@fd*&@fd root
+ nohup>nohup.log java -Xms512m -Xmx512m -jar hotel-spider-provider-0.1.1-SNAPSHOT.jar 2>&1 &
+
+root/Mengmeng520
+redis.password=fangcang@@admin
+-->

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcang.spider.hotel.domain.mapper.CtripHotelRoomDOMapper">
+
+
+	<!-- 通用查询结果列-->
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[
+			,
+			hotel_original_id AS hotelOriginalId,
+			original_id AS originalId,
+			title,
+			hrd_allfac AS hrdAllfac,
+			hrd_info_base AS hrdInfoBase,
+			create_time AS createTime,
+			update_time AS updateTime
+		]]>
+	</sql>
+
+	<!-- 查询列来源表 -->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM ctrip_hotel_room]]></sql>
+
+
+
+	<!--全部条件(更多功能可以通过queryData扩展实现) -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+			<if test="!=null "><![CDATA[AND = #{}]]></if>
+			<if test="hotelOriginalId!=null "><![CDATA[AND hotel_original_id= #{hotelOriginalId}]]></if>
+			<if test="originalId!=null "><![CDATA[AND original_id= #{originalId}]]></if>
+			<if test="title!=null "><![CDATA[AND title= #{title}]]></if>
+			<if test="hrdAllfac!=null "><![CDATA[AND hrd_allfac= #{hrdAllfac}]]></if>
+			<if test="hrdInfoBase!=null "><![CDATA[AND hrd_info_base= #{hrdInfoBase}]]></if>
+			<if test="createTime!=null "><![CDATA[AND create_time= #{createTime}]]></if>
+			<if test="updateTime!=null "><![CDATA[AND update_time= #{updateTime}]]></if>
+		</where>
+	</sql>
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->	<!-- 修 改-->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+			<if test="hotelOriginalId!=null"><![CDATA[hotel_original_id = #{hotelOriginalId},]]></if>
+			<if test="originalId!=null"><![CDATA[original_id = #{originalId},]]></if>
+			<if test="title!=null"><![CDATA[title = #{title},]]></if>
+			<if test="hrdAllfac!=null"><![CDATA[hrd_allfac = #{hrdAllfac},]]></if>
+			<if test="hrdInfoBase!=null"><![CDATA[hrd_info_base = #{hrdInfoBase},]]></if>
+			<if test="createTime!=null"><![CDATA[create_time = #{createTime},]]></if>
+			<if test="updateTime!=null"><![CDATA[update_time = #{updateTime},]]></if>
+		</set>
+	</sql>
+	<!-- 插入记录 -->
+	<insert id="insertSelective" parameterType="ctripHotelRoomDO" useGeneratedKeys="true" keyProperty="">
+			INSERT INTO ctrip_hotel_room
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="hotelOriginalId!=null">hotel_original_id,</if>
+				<if test="originalId!=null">original_id,</if>
+				<if test="title!=null">title,</if>
+				<if test="hrdAllfac!=null">hrd_allfac,</if>
+				<if test="hrdInfoBase!=null">hrd_info_base,</if>
+				<if test="createTime!=null">create_time,</if>
+				<if test="updateTime!=null">update_time,</if>
+			</trim>
+			<trim prefix="values (" suffix=")" suffixOverrides=",">
+				<if test="hotelOriginalId!=null">#{hotelOriginalId},</if>
+				<if test="originalId!=null">#{originalId},</if>
+				<if test="title!=null">#{title},</if>
+				<if test="hrdAllfac!=null">#{hrdAllfac},</if>
+				<if test="hrdInfoBase!=null">#{hrdInfoBase},</if>
+				<if test="createTime!=null">#{createTime},</if>
+				<if test="updateTime!=null">#{updateTime},</if>
+			</trim>
+	</insert>
+
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 删除记录,主键IN(array)  -->
+	<delete id="deleteByArrayKey" parameterType="java.lang.reflect.Array">
+		 <![CDATA[DELETE FROM ctrip_hotel_room  WHERE id IN]]>
+		 <foreach collection="array" item="id" open="(" separator="," close=")">
+			 <![CDATA[#{id}]]>
+		</foreach>
+	</delete>
+
+	<!--删除,通过条件-->
+	<delete id="deleteByCondtion" parameterType="ctripHotelRoomDO">
+		<![CDATA[DELETE FROM ctrip_hotel_room]]>
+			<include refid="QUERY_WHERE_CLAUSE"/>
+	</delete>
+
+	<!--删除,通过主键-->
+	<delete id="deleteByPrimaryKey" parameterType="ctripHotelRoomDO">
+		 <![CDATA[DELETE FROM ctrip_hotel_room  WHERE id = #{id}]]>
+	</delete>
+
+	<!--修改记录通过主键-->
+	<update id="updateByPrimaryKeySelective" parameterType="ctripHotelRoomDO">
+		<![CDATA[UPDATE ctrip_hotel_room]]>
+			<include refid="UPDATE_COLUMN_SET"/>
+			<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键==(key) -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long" resultType="ctripHotelRoomDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id =#{id}]]>
+	</select>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="ctripHotelRoomDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectEntryList" parameterType="ctripHotelRoomDO" resultType="ctripHotelRoomDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+	<!-- 总数查询,通过条件-->
+	<select id="selectEntryListCount" parameterType="ctripHotelRoomDO" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+
+
+</mapper>
