@@ -5,20 +5,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fcang.spider.hotel.base.BaseTest;
 import com.fcang.spider.hotel.provider.biz.FliggyHotelListSpiderBiz;
-import com.fcang.spider.hotel.provider.biz.HotelListSpiderBiz;
+import com.fcang.spider.hotel.provider.biz.CtriptHotelListSpiderBiz;
 
 public class HotelListSpiderBizTest extends BaseTest{
 	@Autowired
-	HotelListSpiderBiz hotelListSpiderBiz;
+	CtriptHotelListSpiderBiz hotelListSpiderBiz;
 	@Autowired
 	FliggyHotelListSpiderBiz fliggyHotelListSpiderBiz;
-	@Test
-	public void runTest() {
-		hotelListSpiderBiz.run();
-	}
+
 	@Test
 	public void runFromDBTest() {
-		hotelListSpiderBiz.runFromDB();
+		hotelListSpiderBiz.runCityFromDB();
 	}
 	@Test
 	public void runFliggy() {

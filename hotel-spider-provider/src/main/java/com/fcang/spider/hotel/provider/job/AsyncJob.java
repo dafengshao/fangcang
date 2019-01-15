@@ -7,17 +7,27 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
+import com.fcang.spider.hotel.provider.biz.CtripHotelRoomBiz;
+import com.fcang.spider.hotel.provider.biz.CtriptHotelListSpiderBiz;
 import com.fcang.spider.hotel.provider.biz.FliggyHotelInfoBiz;
 import com.fcang.spider.hotel.provider.biz.FliggyHotelListSpiderBiz;
 import com.fcang.spider.hotel.provider.util.JedisLocker;
-import com.fcang.spider.hotel.provider.util.JedisLocker.OwnerLock;
 @Component
 public class AsyncJob {
 	private static final Logger logger = LoggerFactory.getLogger(AsyncJob.class);
 	
+	@Bean
+	public TaskScheduler taskScheduler() {
+	    ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+	    taskScheduler.setPoolSize(3);
+	    return taskScheduler;
+	}
   
 	@Autowired
 	Executor providerSimpleAsync;
@@ -26,12 +36,19 @@ public class AsyncJob {
 	@Autowired
 	FliggyHotelInfoBiz fliggyHotelInfoBiz;
 	@Autowired
+	CtriptHotelListSpiderBiz hotelListSpiderBiz;
+	@Autowired
+	CtripHotelRoomBiz ctripHotelRoomBiz;
+	
+	@Autowired
 	JedisLocker jedisLocker;
 	
 	static final Lock lock = new ReentrantLock();
 	static final Lock lockDetail = new ReentrantLock();
-	
-	@Scheduled(cron="0 0/5 * * * *")    //"0/5 * *  * * ? "每5秒执行一次  "0 15 2 ? * *"    每天早上2：15触发 
+	/**
+	 * 飞猪酒店列表
+	 */
+	//@Scheduled(cron="0 26 1 ? * *")   //"0/5 * *  * * ? "每5秒执行一次  "0 15 2 ? * *"    每天早上2：15触发 
 	public void runCityHotelList() {
 		try {
 			boolean tryLock = lock.tryLock();
@@ -47,21 +64,65 @@ public class AsyncJob {
 		
 	}
 	
-	@Scheduled(cron="0 0/2 * * * *") 
-	public void runDetail() {
+	
+	
+	/**
+	 * 携程城市酒店列表
+	 */
+	//@Scheduled(cron="0/5 * * * * *") 
+	public void runFromDB() {
 		try {
 			boolean tryLock = lockDetail.tryLock();
 			if(!tryLock) {
 				return;
 			}
-			logger.info("fliggyHotelInfoBiz.run start");
-			fliggyHotelInfoBiz.run();
-			logger.info("fliggyHotelInfoBiz.run over");
+			logger.info("hotelListSpiderBiz.runFromDB start");
+			hotelListSpiderBiz.runCityFromDB();
+			logger.info("hotelListSpiderBiz.runFromDB over");
 		}finally {
 			lockDetail.unlock();
 		}
 		
 	}
-	
+	static final Lock runCtripHtmlDownloadLock = new ReentrantLock();
+	@Scheduled(cron="0/5 * * * * ? ")
+	public void runCtripHtmlDownload() {
+		try {
+			boolean tryLock = runCtripHtmlDownloadLock.tryLock();
+			if(!tryLock) {
+				return;
+			}
+			logger.info("ctripHotelRoomBiz.runDownHtmlFile start");
+			while(!Thread.interrupted()) {
+				ctripHotelRoomBiz.runDownHtmlFile();
+			}
+			logger.info("ctripHotelRoomBiz.runDownHtmlFile over");
+		} catch (Exception e) {
+			logger.error("",e);
+		}finally {
+			runCtripHtmlDownloadLock.unlock();
+		}
+		
+	} 
+	static final Lock runCtripParseHtmlFileLock = new ReentrantLock();
+	//@Scheduled(cron="0/5 * * * * ? ")
+	public void runCtripParseHtmlFile() {
+		try {
+			boolean tryLock = runCtripParseHtmlFileLock.tryLock();
+			if(!tryLock) {
+				return;
+			}
+			logger.info("ctripHotelRoomBiz.runCtripParseHtmlFile start");
+			while(!Thread.interrupted()) {
+				ctripHotelRoomBiz.runByHarddisk();
+			}
+			logger.info("ctripHotelRoomBiz.runCtripParseHtmlFile over");
+		} catch (Exception e) {
+			logger.error("",e);
+		}finally {
+			runCtripParseHtmlFileLock.unlock();
+		}
+		
+	} 
 	
 }

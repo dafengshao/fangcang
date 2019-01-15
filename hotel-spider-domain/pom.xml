@@ -12,7 +12,11 @@
     <artifactId>hotel-spider-domain</artifactId>
 	
     <dependencies>
-       
+   		<dependency>
+            <groupId>com.fcang.spider</groupId>
+            <artifactId>hotel-spider-core</artifactId>
+            <version>${project.parent.version}</version>
+          </dependency>
           <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-lgpl</artifactId>

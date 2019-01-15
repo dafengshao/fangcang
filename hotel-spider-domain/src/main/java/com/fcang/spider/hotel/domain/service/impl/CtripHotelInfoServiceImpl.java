@@ -1,11 +1,15 @@
 package com.fcang.spider.hotel.domain.service.impl;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
+import com.fcang.spider.hotel.core.ConstantVar;
 import com.fcang.spider.hotel.domain.base.BaseDao;
 import com.fcang.spider.hotel.domain.base.BaseServiceImpl;
 import com.fcang.spider.hotel.domain.mapper.CtripHotelInfoDOMapper;
@@ -40,6 +44,21 @@ public class CtripHotelInfoServiceImpl extends BaseServiceImpl<CtripHotelInfoDO,
 	public int updateByPrimaryKeySelective(CtripHotelInfoDO condition) {
 		condition.setUpdateTime(new Date());
 		return super.updateByPrimaryKeySelective(condition);
+	}
+
+
+	@Override
+	public int insertOrUpdate(CtripHotelInfoDO info) {
+		CtripHotelInfoDO selectByPrimaryKey = super.selectByPrimaryKey(info.getId());
+		if(selectByPrimaryKey!=null) {
+			return 0;
+//			if(!StringUtils.isEmpty(selectByPrimaryKey.getHtladdress())) {
+//				info.setHtladdress(null);
+//			}
+//			info.setMark(null);
+//			return updateByPrimaryKeySelective(info);
+		}
+		return insertSelective(info);
 	}
 	
 	

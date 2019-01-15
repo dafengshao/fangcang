@@ -2,6 +2,7 @@ package com.fcang.spider.hotel.provider.util;
 
 import java.lang.reflect.Method;
 
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +15,16 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.commands.JedisCommands;
 @Component
 public class JedisCommandsProxyConfiguration {
-	
-	
-	@Autowired
-    private JedisPool jedisPool;
+	static GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
+	static {
+		poolConfig.setMaxIdle(2);
+		poolConfig.setMinIdle(2);
+		poolConfig.setMaxTotal(4);
+	}
+    private JedisPool jedisPool = new JedisPool(poolConfig,"39.108.73.131", 6379,5000,"fangcang@@admin",0);
 	
 	@Bean
-	public JedisCommands initJedisProxy() {
+	public JedisCommands jedis() {
 		ProviderInvocationHandler handler = new ProviderInvocationHandler() {
 			final Logger logger = LoggerFactory.getLogger(ProviderInvocationHandler.class);
 			@Override
@@ -49,11 +53,9 @@ public class JedisCommandsProxyConfiguration {
 		return handler.getProxy(new Jedis());
 	}
 	
-	@Autowired
-	JedisCommands jedis;
 	@Bean
 	public JedisLocker initJedisLocker() {
-		return new JedisLocker(jedis);
+		return new JedisLocker(jedis());
 	}
 	
 }

@@ -8,9 +8,8 @@
 	<!-- 所有查询列 -->
 	<sql id="QUERY_COLUMN_LIST">
 		<![CDATA[
-			,
+			id,
 			name_ch AS nameCh,
-			original_id AS originalId,
 			original_url AS originalUrl,
 			original_page AS originalPage,
 			city,
@@ -34,6 +33,12 @@
 			create_time AS createTime,
 			update_time AS updateTime
 			,mark
+			,ext_info AS extInfo
+			,contact
+			,region
+			,brand
+			,star
+			,star_desc as starDesc
 		]]>
 	</sql>
 
@@ -45,9 +50,8 @@
 	<!--全部条件(更多功能可以通过queryData扩展实现) -->
 	<sql id="QUERY_WHERE_CLAUSE">
 		<where>
-			<if test="!=null "><![CDATA[AND = #{}]]></if>
+			<if test="id!=null "><![CDATA[AND id= #{id}]]></if>
 			<if test="nameCh!=null "><![CDATA[AND name_ch= #{nameCh}]]></if>
-			<if test="originalId!=null "><![CDATA[AND original_id= #{originalId}]]></if>
 			<if test="originalUrl!=null "><![CDATA[AND original_url= #{originalUrl}]]></if>
 			<if test="originalPage!=null "><![CDATA[AND original_page= #{originalPage}]]></if>
 			<if test="city!=null "><![CDATA[AND city= #{city}]]></if>
@@ -71,13 +75,16 @@
 			<if test="createTime!=null "><![CDATA[AND create_time= #{createTime}]]></if>
 			<if test="updateTime!=null "><![CDATA[AND update_time= #{updateTime}]]></if>
 			<if test="mark!=null"><![CDATA[AND mark= #{mark}]]></if>
+			<if test="extInfo!=null"><![CDATA[AND ext_info= #{extInfo}]]></if>
+			<if test="region!=null"><![CDATA[AND region= #{region}]]></if>
+			<if test="brand!=null"><![CDATA[AND brand= #{brand}]]></if>
+			
 		</where>
 	</sql>
 	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->	<!-- 修 改-->
 	<sql id="UPDATE_COLUMN_SET">
 		<set>
 			<if test="nameCh!=null"><![CDATA[name_ch = #{nameCh},]]></if>
-			<if test="originalId!=null"><![CDATA[original_id = #{originalId},]]></if>
 			<if test="originalUrl!=null"><![CDATA[original_url = #{originalUrl},]]></if>
 			<if test="originalPage!=null"><![CDATA[original_page = #{originalPage},]]></if>
 			<if test="city!=null"><![CDATA[city = #{city},]]></if>
@@ -101,14 +108,20 @@
 			<if test="createTime!=null"><![CDATA[create_time = #{createTime},]]></if>
 			<if test="updateTime!=null"><![CDATA[update_time = #{updateTime},]]></if>
 			<if test="mark!=null"><![CDATA[mark= #{mark},]]></if>
+			<if test="extInfo!=null"><![CDATA[ext_info= #{extInfo},]]></if>
+			<if test="contact!=null"><![CDATA[contact= #{contact},]]></if>
+			<if test="region!=null"><![CDATA[region= #{region},]]></if>
+			<if test="brand!=null"><![CDATA[brand= #{brand},]]></if>
+			<if test="star!=null"><![CDATA[star= #{star},]]></if>
+			<if test="starDesc!=null"><![CDATA[star_desc = #{starDesc},]]></if>
 		</set>
 	</sql>
 	<!-- 插入记录 -->
-	<insert id="insertSelective" parameterType="ctripHotelInfoDO" useGeneratedKeys="true" keyProperty="">
+	<insert id="insertSelective" parameterType="ctripHotelInfoDO" >
 			INSERT INTO ctrip_hotel_info
 			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="id!=null">id,</if>
 				<if test="nameCh!=null">name_ch,</if>
-				<if test="originalId!=null">original_id,</if>
 				<if test="originalUrl!=null">original_url,</if>
 				<if test="originalPage!=null">original_page,</if>
 				<if test="city!=null">city,</if>
@@ -132,10 +145,16 @@
 				<if test="createTime!=null">create_time,</if>
 				<if test="updateTime!=null">update_time,</if>
 				<if test="mark!=null">mark,</if>
+				<if test="extInfo!=null"><![CDATA[ext_info,]]></if>
+				<if test="contact!=null"><![CDATA[contact,]]></if>
+				<if test="region!=null"><![CDATA[region,]]></if>
+				<if test="brand!=null"><![CDATA[brand,]]></if>
+				<if test="star!=null"><![CDATA[star,]]></if>
+				<if test="starDesc!=null"><![CDATA[star_desc,]]></if>
 			</trim>
 			<trim prefix="values (" suffix=")" suffixOverrides=",">
+				<if test="id!=null">#{id},</if>
 				<if test="nameCh!=null">#{nameCh},</if>
-				<if test="originalId!=null">#{originalId},</if>
 				<if test="originalUrl!=null">#{originalUrl},</if>
 				<if test="originalPage!=null">#{originalPage},</if>
 				<if test="city!=null">#{city},</if>
@@ -159,6 +178,12 @@
 				<if test="createTime!=null">#{createTime},</if>
 				<if test="updateTime!=null">#{updateTime},</if>
 				<if test="mark!=null">#{mark},</if>
+				<if test="extInfo!=null"><![CDATA[#{extInfo},]]></if>
+				<if test="contact!=null"><![CDATA[#{contact},]]></if>
+				<if test="region!=null"><![CDATA[#{region},]]></if>
+				<if test="brand!=null"><![CDATA[#{brand},]]></if>
+				<if test="star!=null"><![CDATA[#{star},]]></if>
+				<if test="starDesc!=null"><![CDATA[#{starDesc},]]></if>
 			</trim>
 	</insert>
 

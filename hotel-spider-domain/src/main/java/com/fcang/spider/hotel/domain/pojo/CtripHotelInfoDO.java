@@ -15,8 +15,6 @@ public class CtripHotelInfoDO  extends BaseDomain  {
 	/****/
 	private String nameCh;
 
-	/****/
-	private String originalId;
 
 	/****/
 	private String originalUrl;
@@ -25,6 +23,7 @@ public class CtripHotelInfoDO  extends BaseDomain  {
 	private Integer originalPage;
 
 	/****/
+	private String region;
 	private String city;
 
 	/**是否精选 1是；0否**/
@@ -77,10 +76,16 @@ public class CtripHotelInfoDO  extends BaseDomain  {
 
 	/****/
 	private String hotelRes;
+	private String brand;
 
 	private String mark;
 
-
+	private String  extInfo;
+	
+	private String  contact;
+	private String  star;
+	private String  starDesc;
+	
 	/****/
 	public void setNameCh(String nameCh){
 		this.nameCh = nameCh;
@@ -91,15 +96,6 @@ public class CtripHotelInfoDO  extends BaseDomain  {
 		return this.nameCh;
 	}
 
-	/****/
-	public void setOriginalId(String originalId){
-		this.originalId = originalId;
-	}
-
-	/****/
-	public String getOriginalId(){
-		return this.originalId;
-	}
 
 	/****/
 	public void setOriginalUrl(String originalUrl){
@@ -308,6 +304,60 @@ public class CtripHotelInfoDO  extends BaseDomain  {
 
 	public void setMark(String mark) {
 		this.mark = mark;
+	}
+	/**
+	 * 开业时间 联系方式
+	 * @return
+	 */
+	public String getExtInfo() {
+		return extInfo;
+	}
+	/**
+	 * 开业时间
+	 * @return
+	 */
+	public void setExtInfo(String extInfo) {
+		this.extInfo = extInfo;
+	}
+	/** 联系方式*/
+	public String getContact() {
+		return contact;
+	}
+	/** 联系方式*/
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
+
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
+	public String getStar() {
+		return star;
+	}
+
+	public void setStar(String star) {
+		this.star = star;
+	}
+
+	public String getStarDesc() {
+		return starDesc;
+	}
+
+	public void setStarDesc(String starDesc) {
+		this.starDesc = starDesc;
 	}
 
 	@Override

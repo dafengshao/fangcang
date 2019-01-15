@@ -15,4 +15,5 @@ import com.fcang.spider.hotel.domain.pojo.CtripHotelInfoDO;
 public interface CtripHotelInfoService extends BaseService<CtripHotelInfoDO , Long> {
 
 
+	public int insertOrUpdate(CtripHotelInfoDO info);
 }
