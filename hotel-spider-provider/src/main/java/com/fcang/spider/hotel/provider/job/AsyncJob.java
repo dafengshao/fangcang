@@ -17,6 +17,7 @@ import com.fcang.spider.hotel.provider.biz.CtripHotelRoomBiz;
 import com.fcang.spider.hotel.provider.biz.CtriptHotelListSpiderBiz;
 import com.fcang.spider.hotel.provider.biz.FliggyHotelInfoBiz;
 import com.fcang.spider.hotel.provider.biz.FliggyHotelListSpiderBiz;
+import com.fcang.spider.hotel.provider.biz.MeituanHotelListSpiderBiz;
 import com.fcang.spider.hotel.provider.util.JedisLocker;
 @Component
 public class AsyncJob {
@@ -85,7 +86,10 @@ public class AsyncJob {
 		
 	}
 	static final Lock runCtripHtmlDownloadLock = new ReentrantLock();
-	@Scheduled(cron="0/5 * * * * ? ")
+	/**
+	 * 携程酒店详情
+	 */
+	//@Scheduled(cron="0/5 * * * * ? ")
 	public void runCtripHtmlDownload() {
 		try {
 			boolean tryLock = runCtripHtmlDownloadLock.tryLock();
@@ -123,6 +127,17 @@ public class AsyncJob {
 			runCtripParseHtmlFileLock.unlock();
 		}
 		
-	} 
+	}
+	@Autowired
+	MeituanHotelListSpiderBiz  meituanHotelListSpiderBiz;
+	//@Scheduled(cron="0/5 * * * * ? ")
+	public void runMeituanCity() {
+		meituanHotelListSpiderBiz.runCityFromDB();
+	}
+	
+	@Scheduled(cron="0/5 * * * * ? ")
+	public void runMeituanHotelDetail() {
+		meituanHotelListSpiderBiz.runMeituanHotelDetail();
+	}
 	
 }

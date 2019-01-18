@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -65,6 +66,11 @@ public class CityHotelAssemServiceImpl extends BaseServiceImpl<CityHotelAssemDO,
 		if(t.getTaskBatch()==null) {
 			t.setTaskBatch("0");
 		}
-		return super.insertSelective(t);
+		try {
+			return super.insertSelective(t);
+		}catch (DuplicateKeyException e) {
+			return 0;
+		}
+		
 	}
 }

@@ -21,7 +21,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fcang.spider.hotel.core.BaseFullResponse;
 import com.fcang.spider.hotel.core.DateUtil;
-import com.fcang.spider.hotel.core.JoupUtil;
+import com.fcang.spider.hotel.core.JsoupUtil;
 import com.fcang.spider.hotel.core.ProxyInfo;
 import com.fcang.spider.hotel.domain.pojo.AreaDO;
 import com.fcang.spider.hotel.domain.pojo.CtripHotelInfoDO;
@@ -50,7 +50,7 @@ public class FliggyHotelHtmlUtil {
 		int i = 1;
 		while(true) {
 			String url =URL_FORM+(i++);
-			BaseFullResponse<Document> buildByUrl = JoupUtil.buildByUrl(url,null, headers,null);
+			BaseFullResponse<Document> buildByUrl = JsoupUtil.buildByUrl(url,null, headers,null);
 			if(buildByUrl.isSuccess()) {
 				Document data = buildByUrl.getData();
 				Elements elementsByClass = data.getElementsByClass("J_LazyZoom");
@@ -79,7 +79,7 @@ public class FliggyHotelHtmlUtil {
 		for(;i<abc.length();i++) {
 			char a = abc.charAt(i);
 			String sul = CITY_URL+a;
-			BaseFullResponse<Document> buildByUrl = JoupUtil.buildByUrl(sul, null, null,null);
+			BaseFullResponse<Document> buildByUrl = JsoupUtil.buildByUrl(sul, null, null,null);
 			if(buildByUrl.isSuccess()) {
 				Element body = buildByUrl.getData().body();
 				String text = body.text();
@@ -110,7 +110,7 @@ public class FliggyHotelHtmlUtil {
 	}
 	static String AREA_URL = "http://www.ip33.com/area_code.html";
 	public void runArea() {
-		BaseFullResponse<Document> buildByUrl = JoupUtil.buildByUrl(AREA_URL, null, null,null);
+		BaseFullResponse<Document> buildByUrl = JsoupUtil.buildByUrl(AREA_URL, null, null,null);
 		if(buildByUrl.isSuccess()) {
 			Document data = buildByUrl.getData();
 			Elements elementsByClass = data.getElementsByClass("ip");
@@ -192,13 +192,13 @@ public class FliggyHotelHtmlUtil {
 		BaseFullResponse<Document> buildByUrl = new BaseFullResponse<>();
 		Date date = new Date();
 		while(i++<6) {
-//			ProxyInfo proxy = JoupUtil.getProxy();
+//			ProxyInfo proxy = JsoupUtil.getProxy();
 //			if(proxy==null||proxy.getAndIncrement()>100||proxy.getAndIncrementFailCount()>3) {
 //				proxy = ProxyProviderBiz.getProxyInfoRandom();
-//				JoupUtil.setProxy(proxy);
-//				JoupUtil.setRandomUa();
+//				JsoupUtil.setProxy(proxy);
+//				JsoupUtil.setRandomUa();
 //			}
-			JoupUtil.setRandomUa();
+			JsoupUtil.setRandomUa();
 			
 			String format = url.replaceAll("ppCityIdpp", cityCode)
 					.replaceAll("ppCheckInpp",DateFormatUtils
@@ -209,12 +209,12 @@ public class FliggyHotelHtmlUtil {
 					.replaceAll("ppIppp", "222.212.87.21")
 					;//+param;
 			headers.put("Referrer", "http://hotel.fliggy.com/hotel_list3.htm?city="+cityCode+"&"+System.currentTimeMillis());
-			headers.put("user-agent", JoupUtil.getUserAgent());
+			headers.put("user-agent", JsoupUtil.getUserAgent());
 			logger.info("buildNormal,url:{}",format);
-			buildByUrl = JoupUtil.buildByUrl(format
+			buildByUrl = JsoupUtil.buildByUrl(format
 					, null, headers, null );
 			if(!buildByUrl.isSuccess()) {
-				logger.error("JoupUtil.buildByUrl fail.url:{}/n,res:{}",url,buildByUrl);
+				logger.error("JsoupUtil.buildByUrl fail.url:{}/n,res:{}",url,buildByUrl);
 				continue;
 			}else {
 				break;
@@ -336,7 +336,7 @@ public class FliggyHotelHtmlUtil {
 			+ "&laterPaySwitch&isNotFilterActivityCodeShotel&_ksTS="+System.currentTimeMillis()+"_4168"
 			+"&client=11.20.100.247";
 	public static void main(String[] args) {
-		BaseFullResponse<Document> buildByUrl = JoupUtil.buildByUrl("https://hotel.fliggy.com/ajax/hotelList.htm?pageSize=50&city=420100&currentPage=1000", null, null, null);
+		BaseFullResponse<Document> buildByUrl = JsoupUtil.buildByUrl("https://hotel.fliggy.com/ajax/hotelList.htm?pageSize=50&city=420100&currentPage=1000", null, null, null);
 		int indexOf = buildByUrl.getData().body().text().indexOf("\"hotelList\":[]");
 		System.out.println(indexOf);
 	}

@@ -2,6 +2,7 @@ package com.fcang.spider.hotel.domain.service.impl;
 
 import javax.annotation.Resource;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import com.fcang.spider.hotel.domain.base.BaseDao;
@@ -26,5 +27,13 @@ public class CtripCityServiceImpl extends BaseServiceImpl<CtripCityDO, Long> imp
 	public BaseDao<CtripCityDO, Long> getDao(){
 		return ctripCityDOMapper;
 	}
-
+	@Override
+	public int insertSelective(CtripCityDO t) {
+		try {
+			return super.insertSelective(t);
+		}catch (DuplicateKeyException e) {
+			
+		}
+		return 0;
+	}
 }

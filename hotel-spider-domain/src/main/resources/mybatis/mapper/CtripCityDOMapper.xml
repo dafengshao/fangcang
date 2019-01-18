@@ -18,7 +18,7 @@
 	</sql>
 
 	<!-- 查询列来源表 -->
-	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM ctrip_city]]></sql>
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM ${tableName}]]></sql>
 
 
 
@@ -45,7 +45,7 @@
 	</sql>
 	<!-- 插入记录 -->
 	<insert id="insertSelective" parameterType="ctripCityDO" >
-			INSERT INTO ctrip_city
+			INSERT INTO ${tableName}
 			<trim prefix="(" suffix=")" suffixOverrides=",">
 				<if test="id!=null">id,</if>
 				<if test="city!=null">city,</if>
@@ -69,7 +69,7 @@
 
 	<!-- 删除记录,主键IN(array)  -->
 	<delete id="deleteByArrayKey" parameterType="java.lang.reflect.Array">
-		 <![CDATA[DELETE FROM ctrip_city  WHERE id IN]]>
+		 <![CDATA[DELETE FROM ${tableName}  WHERE id IN]]>
 		 <foreach collection="array" item="id" open="(" separator="," close=")">
 			 <![CDATA[#{id}]]>
 		</foreach>
@@ -77,18 +77,18 @@
 
 	<!--删除,通过条件-->
 	<delete id="deleteByCondtion" parameterType="ctripCityDO">
-		<![CDATA[DELETE FROM ctrip_city]]>
+		<![CDATA[DELETE FROM ${tableName}]]>
 			<include refid="QUERY_WHERE_CLAUSE"/>
 	</delete>
 
 	<!--删除,通过主键-->
 	<delete id="deleteByPrimaryKey" parameterType="ctripCityDO">
-		 <![CDATA[DELETE FROM ctrip_city  WHERE id = #{id}]]>
+		 <![CDATA[DELETE FROM ${tableName}  WHERE id = #{id}]]>
 	</delete>
 
 	<!--修改记录通过主键-->
 	<update id="updateByPrimaryKeySelective" parameterType="ctripCityDO">
-		<![CDATA[UPDATE ctrip_city]]>
+		<![CDATA[UPDATE ${tableName}]]>
 			<include refid="UPDATE_COLUMN_SET"/>
 			<![CDATA[WHERE id = #{id}]]>
 	</update>

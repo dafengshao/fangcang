@@ -13,7 +13,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.fcang.spider.hotel.core.BaseFullResponse;
 import com.fcang.spider.hotel.core.CtripHotelHtmlUtil;
 import com.fcang.spider.hotel.core.DateUtil;
-import com.fcang.spider.hotel.core.JoupUtil;
+import com.fcang.spider.hotel.core.JsoupUtil;
 import com.fcang.spider.hotel.domain.pojo.CtripHotelInfoDO;
 
 public class CtripHotelListTest {//extends BaseTest{
@@ -32,7 +32,7 @@ public class CtripHotelListTest {//extends BaseTest{
 		parm.put("DepTime", endDateStr);
 		parm.put("cityId", cityId+"");
 		parm.put("page", page+"");
-		BaseFullResponse<Document> buildByUrl = JoupUtil.buildByUrl(url, parm, herders , null);
+		BaseFullResponse<Document> buildByUrl = JsoupUtil.buildByUrl(url, parm, herders , null);
 		if(buildByUrl.isSuccess()) {
 			Document data = buildByUrl.getData();
 			String html = data.body().html();

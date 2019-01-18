@@ -16,11 +16,11 @@ import org.slf4j.LoggerFactory;
 import com.alibaba.fastjson.JSONObject;
 
 
-public class JoupUtil {
-	private JoupUtil() {}
+public class JsoupUtil {
+	private JsoupUtil() {}
 	
 	static final Logger LOGGER
-	= LoggerFactory.getLogger(JoupUtil.class);
+	= LoggerFactory.getLogger(JsoupUtil.class);
 	
 	private static final ThreadLocal<JSONObject> PROXYINFOTHREADLOCAL = new ThreadLocal() ;
 	
@@ -50,11 +50,11 @@ public class JoupUtil {
 		connect.timeout(20000);
 		connect.header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
 		connect.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
-		connect.cookie("Cookie", "ASP.NET_SessionId=ftgwhqoygl4lxz1xridqqypp; _abtest_userid=1ee16158-a288-4541-8ad9-eededecd017c; OID_ForOnlineHotel=15470143643052onlwm1547014365155102002; _ga=GA1.2.2113510859.1547014367; _gid=GA1.2.537436028.1547014367; _RF1=222.212.140.66; _RSG=gcK7ZYWloBCIWsPgwaMCaA; _RDG=28adb20bdd57d8238f3970baf9b380a635; _RGUID=c2f2be08-a31d-49aa-a90c-5a4eaa676812; MKT_Pagesource=PC; appFloatCnt=4; manualclose=1; _bfa=1.1547014364305.2onlwm.1.1547014364305.1547017769043.2.10; _bfs=1.9; MKT_OrderClick=ASID=&CT=1547018402718&CURL=http%3A%2F%2Fhotels.ctrip.com%2Fhotel%2Fwuhan477%2Fp204&VAL={\"pc_vid\":\"1547014364305.2onlwm\"}; _jzqco=%7C%7C%7C%7C1547014367806%7C1.2024051462.1547014367481.1547017814946.1547018402758.1547017814946.1547018402758.undefined.0.0.6.6; __zpspc=9.2.1547017771.1547018402.5%234%7C%7C%7C%7C%7C%23; _gat=1; _bfi=p1%3D102002%26p2%3D102002%26v1%3D10%26v2%3D9");
+		//connect.cookie("Cookie", "__mta=245791291.1548293795052.1548293795052.1548309797417.2; uuid=700ecb32a68b494eb519.1548293784.1.0.0; _lx_utm=utm_source%3DBaidu%26utm_medium%3Dorganic; _lxsdk_cuid=1687d804afec8-0d7c844cf56744-58422116-e1000-1687d804affc8; ci=1; rvct=1; iuuid=8AB76F6F1FA22EF7DF7FE4AA887B5C0EA007418F9EB7746517B1BA39AC88FA50; cityname=%E5%8C%97%E4%BA%AC; _lxsdk=8AB76F6F1FA22EF7DF7FE4AA887B5C0EA007418F9EB7746517B1BA39AC88FA50; hotel_city_id=1; hotel_city_info=%7B%22id%22%3A1%2C%22name%22%3A%22%E5%8C%97%E4%BA%AC%22%2C%22pinyin%22%3A%22beijing%22%7D; IJSESSIONID=4qavw61v8b4p15bxcuky9izxp; _lxsdk_s=1687e73978d-5e0-f90-856%7C%7C5");
 		return connect;
 	}
 	public static BaseFullResponse<Document> buildByUrl(String url,Map<String,String> parm,Map<String,String> herders,ProxyInfo info) {
-		Connection connect = JoupUtil.connect(url,parm,herders);
+		Connection connect = JsoupUtil.connect(url,parm,herders);
 		if(info!=null) {
 			connect.proxy(info.getHost(), info.getPort());
 		}

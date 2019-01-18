@@ -15,7 +15,7 @@ import org.springframework.util.StringUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.fcang.spider.hotel.core.BaseFullResponse;
-import com.fcang.spider.hotel.core.JoupUtil;
+import com.fcang.spider.hotel.core.JsoupUtil;
 import com.fcang.spider.hotel.domain.pojo.CtripHotelInfoDO;
 
 public class CtripHotelHtmlUtil {
@@ -23,7 +23,7 @@ public class CtripHotelHtmlUtil {
 	CtripHotelHtmlUtil(){}
 	//"http://hotels.ctrip.com/hotel/wuhan477/p2"
 	public static BaseFullResponse<List<CtripHotelInfoDO>> buildHotellist(String url) {
-		BaseFullResponse<Document> buildByUrl = JoupUtil.buildByUrl(url,null, null,null);
+		BaseFullResponse<Document> buildByUrl = JsoupUtil.buildByUrl(url,null, null,null);
 		if(buildByUrl.isSuccess()) {
 			Document data = buildByUrl.getData();
 			List<CtripHotelInfoDO> ctripHotelInfoDOs =	paseHtmlDocument( data);
@@ -37,7 +37,7 @@ public class CtripHotelHtmlUtil {
 	public static BaseFullResponse<List<CtripHotelInfoDO>> buildLocalHotellist(String url) {
 		Map<String, String> headers = new HashMap();
 		headers.put("url", url);
-		BaseFullResponse<Document> buildByUrl = JoupUtil.buildByUrl("http://127.0.0.1:8020",null , headers,null);
+		BaseFullResponse<Document> buildByUrl = JsoupUtil.buildByUrl("http://127.0.0.1:8020",null , headers,null);
 		if(buildByUrl.isSuccess()) {
 			Document data = buildByUrl.getData();
 			List<CtripHotelInfoDO> ctripHotelInfoDOs =	paseHtmlDocument( data);
@@ -48,7 +48,7 @@ public class CtripHotelHtmlUtil {
 		return BaseFullResponse.failed("");
 	}
 	public static BaseFullResponse<List<CtripHotelInfoDO>> buildHotellist(File file) {
-		BaseFullResponse<Document> buildByUrl = JoupUtil.buildByFile(file,"utf-8");
+		BaseFullResponse<Document> buildByUrl = JsoupUtil.buildByFile(file,"utf-8");
 		if(buildByUrl.isSuccess()) {
 			Document data = buildByUrl.getData();
 			List<CtripHotelInfoDO> ctripHotelInfoDOs =	paseHtmlDocument( data);

@@ -15,7 +15,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.fcang.spider.hotel.core.JoupUtil;
+import com.fcang.spider.hotel.core.JsoupUtil;
 import com.fcang.spider.hotel.domain.pojo.AreaDO;
 import com.fcang.spider.hotel.domain.pojo.CityHotelAssemDO;
 import com.fcang.spider.hotel.domain.pojo.FliggyHotelDO;
@@ -42,7 +42,7 @@ public class FliggyHotelListSpiderBiz {
 		condtion.setStatusCode("0");
 		int startPageNo = 1;
 		String batchCode =new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-		JoupUtil.setBatchInfo(batchCode);
+		JsoupUtil.setBatchInfo(batchCode);
 		while(true) {
 			PageHelper.startPage(startPageNo, 50,false).setOrderBy("id asc");
 			List<AreaDO> selectEntryList = areaService.selectEntryList(condtion);
@@ -69,7 +69,7 @@ public class FliggyHotelListSpiderBiz {
 	
 		while(true){
 			int currentPage = pageNo;
-			CityHotelAssemDO uniq = cityHotelAssemService.getUniq(1, cityId, cityCode, currentPage, pageSize,JoupUtil.getBatchInfo());
+			CityHotelAssemDO uniq = cityHotelAssemService.getUniq(1, cityId, cityCode, currentPage, pageSize,JsoupUtil.getBatchInfo());
 			if(uniq!=null&&uniq.getReponseContent()!=null) {
 				JSONObject parse = (JSONObject)JSONObject.parse(uniq.getReponseContent());
 				JSONArray jsonArray = parse.getJSONArray("hotelList");
@@ -92,7 +92,7 @@ public class FliggyHotelListSpiderBiz {
 			newAssem.setCityId(cityId);
 			newAssem.setCurrentPage(currentPage);
 			newAssem.setPageSize(pageSize);
-			newAssem.setTaskBatch(JoupUtil.getBatchInfo());
+			newAssem.setTaskBatch(JsoupUtil.getBatchInfo());
 			Document buildNormal = null;
 			try {
 				//Thread.sleep(2000);

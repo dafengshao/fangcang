@@ -24,6 +24,8 @@ public class CtripCityDO  extends BaseDomain  {
 
 	private Integer type;
 
+	private String tableName = "ctrip_city";
+	
 	/****/
 	public void setCity(String city){
 		this.city = city;
@@ -60,6 +62,17 @@ public class CtripCityDO  extends BaseDomain  {
 	/**1携程 、2飞猪*/
 	public void setType(Integer type) {
 		this.type = type;
+	}
+
+	public String getTableName() {
+		if("meituan".equals(mark)) {
+			tableName = "meituan_city";
+		}
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
 	}
 
 	@Override
