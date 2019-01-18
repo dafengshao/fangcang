@@ -21,9 +21,9 @@ public class JedisLocker {
 	}
 	
 	/** 不存在就设值，并且设置过期时间，原子操作 */
-	public boolean setNxEx(String key, String value, long seconds) {
+	public boolean setNxEx(String key, String value, int seconds) {
 		SetParams setpa = new SetParams();
-		setpa.px(seconds);
+		setpa.ex(seconds);
 		setpa.nx();
 		String set = jedis.set(key, value,setpa);
 		return "OK".equals(set);
@@ -72,7 +72,7 @@ public class JedisLocker {
 	}
 
 	/** 给指定参数加锁,lockSeconds为锁定时间单位ms，需要调用release释放 */
-	public OwnerLock lock(String key, long lockSeconds) {
+	public OwnerLock lock(String key, int lockSeconds) {
 		String lockKey = (LOCKKEY_PREFIX.concat(key));
 		UUID uuid = UUID.randomUUID();
 		OwnerLock lock = null;

@@ -52,14 +52,14 @@ public class CtripHotelRoomBiz {
 	public void runDownHtmlFile() throws InterruptedException {
 		Date date = new Date();
 		CtripHotelInfoDO condtion = new CtripHotelInfoDO();
-		condtion.setCityCode("wuhan");
+		//condtion.setCityCode("wuhan");
 		condtion.setMark(ConstantVar.INIT_SUCCESS);
 		//update_time越新越晚处理
 		String orderby = "update_time asc,create_time desc";
 		if(PhantomjsLoader.isWindows) {
 			orderby = "update_time desc,create_time desc";
 		}
-		PageHelper.startPage(1,30,false).setOrderBy(orderby);
+		PageHelper.startPage(1,50,false).setOrderBy(orderby);
 		List<CtripHotelInfoDO> selectEntryList = ctripHotelInfoService.selectEntryList(condtion );
 		PageHelper.clearPage();
 		if(CollectionUtils.isEmpty(selectEntryList)) {

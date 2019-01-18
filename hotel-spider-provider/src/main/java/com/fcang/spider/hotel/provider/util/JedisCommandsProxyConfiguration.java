@@ -54,8 +54,8 @@ public class JedisCommandsProxyConfiguration {
 	}
 	
 	@Bean
-	public JedisLocker initJedisLocker() {
-		return new JedisLocker(jedis());
+	public JedisLocker initJedisLocker(JedisCommands jedis) {
+		return new JedisLocker(jedis);
 	}
 	
 }
