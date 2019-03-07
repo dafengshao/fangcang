@@ -70,7 +70,7 @@ public class AsyncJob {
 	/**
 	 * 携程城市酒店列表
 	 */
-	//@Scheduled(cron="0/5 * * * * *") 
+	@Scheduled(cron="0/5 * * * * *") 
 	public void runFromDB() {
 		try {
 			boolean tryLock = lockDetail.tryLock();

@@ -47,7 +47,6 @@ public class CtriptHotelListSpiderBiz {
 	
 	public void runCityFromDB() {
 		CtripCityDO condtion = new CtripCityDO();
-		//condtion.setCode("Nanning");
 		PageHelper.startPage(1, 1000, false).setOrderBy("type asc,id desc");
 		List<CtripCityDO> selectEntryList = ctripCityService.selectEntryList(condtion);
 		PageHelper.clearPage();

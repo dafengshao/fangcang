@@ -26,8 +26,13 @@ public class AjaxCtripCityHotelListUtil {
 		herders.put("Cookie", "_RGUID=02cc4dff-888c-4764-b2fd-e5a30e2e8df6; _RSG=aT4Z8.VJCB0steBECQvzBB; _RDG=286d8cf82a7c492d412281051417c943d1; _abtest_userid=f9073d77-5f27-4323-af04-81476e64eddc; _ga=GA1.2.776580256.1547047482; _gid=GA1.2.763056674.1547047482; MKT_Pagesource=PC; gad_city=be2e953e1ae09d16d9cc90a550611388; HotelCityID=477split%E6%AD%A6%E6%B1%89splitWuhansplit2019-01-10split2019-01-11split0; appFloatCnt=29; manualclose=1; _RF1=125.69.43.13; HotelDomesticVisitedHotels1=0=0,,0,0,,&6547475=0,0,4.5,377,/200d0v000000k1xs4D77E.jpg,&858509=0,0,4.3,1059,/20010n000000eoq87D00A.jpg,&8446971=0,0,4.3,417,/20070k000000crhezF4F0.jpg,&444966=0,0,4.5,5287,/20020i0000009gkue3ACF.jpg,&7104977=0,0,4.8,1488,/20060e00000075r4nD8FC.jpg,; ASP.NET_SessionId=ehl4ffnsqaltceovld4lisya; _bfa=1.1547047479551.2nb3gg.1.1547123773076.1547138029942.7.55; _bfs=1.4; OID_ForOnlineHotel=15470474795512nb3gg1547138540857102032; _gat=1; MKT_OrderClick=ASID=&CT=1547138543257&CURL=http%3A%2F%2Fhotels.ctrip.com%2Fhotel%2Fwuhan477%2Fp205&VAL={\"pc_vid\":\"1547047479551.2nb3gg\"}; _jzqco=%7C%7C%7C%7C1547138032478%7C1.1082763304.1547047482301.1547138045437.1547138543293.1547138045437.1547138543293.undefined.0.0.42.42; __zpspc=9.7.1547138032.1547138543.3%234%7C%7C%7C%7C%7C%23; _bfi=p1%3D102032%26p2%3D0%26v1%3D55%26v2%3D0");
 	}
 	public static BaseFullResponse<Collection<CtripHotelInfoDO>> ajaxCityHotelList(Integer page,Long cityId,String cityCode) {
+<<<<<<< HEAD
 		Date start = DateUtil.plusDaysToDate(new Date(),1);
 		Date end = DateUtil.plusDaysToDate(new Date(),2);
+=======
+		Date start = DateUtil.plusDaysToDate(new Date(),6);
+		Date end = DateUtil.plusDaysToDate(new Date(),7);
+>>>>>>> branch 'master' of https://github.com/dafengshao/fangcang.git
 		String startDateStr = DateFormatUtils.format(start,"yyyy-MM-dd");
 		String endDateStr = DateFormatUtils.format(end,"yyyy-MM-dd");
 		Map<String, String> parm = new HashMap<>();
