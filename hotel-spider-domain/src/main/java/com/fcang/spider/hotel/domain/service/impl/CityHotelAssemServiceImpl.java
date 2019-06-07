@@ -39,6 +39,7 @@ public class CityHotelAssemServiceImpl extends BaseServiceImpl<CityHotelAssemDO,
 		condtion.setCurrentPage(currentPage);
 		condtion.setPageSize(pageSize);
 		condtion.setRequestType(type);
+		condtion.setMark("feizhu");
 		if(batchCode==null) {
 			condtion.setTaskBatch("0");
 		}else {
@@ -61,12 +62,15 @@ public class CityHotelAssemServiceImpl extends BaseServiceImpl<CityHotelAssemDO,
 	public int insertOrUpdate(CityHotelAssemDO t) {
 		t.setUpdateTime(new Date());
 		if(t.getId()!=null) {
+			
 			return super.updateByPrimaryKeySelective(t);
 		}
 		if(t.getTaskBatch()==null) {
 			t.setTaskBatch("0");
 		}
 		try {
+			t.setCreateTime(new Date());
+			//存在会更新
 			return super.insertSelective(t);
 		}catch (DuplicateKeyException e) {
 			return 0;

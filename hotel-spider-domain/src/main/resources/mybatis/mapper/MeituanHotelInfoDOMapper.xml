@@ -162,6 +162,10 @@
 				<if test="updateTime!=null">#{updateTime},</if>
 				<if test="cityHotelAssemId!=null">#{cityHotelAssemId},</if>
 			</trim>
+			  ON DUPLICATE KEY UPDATE
+			  price_low = #{priceLow},
+        		update_time = NOW()
+			
 	</insert>
 
 	<!-- 返回插入的编号,在事务开启状态下有效 -->

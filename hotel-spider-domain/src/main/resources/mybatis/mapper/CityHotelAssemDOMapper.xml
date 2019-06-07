@@ -95,6 +95,13 @@
 				<if test="updateTime!=null">#{updateTime},</if>
 				<if test="taskBatch!=null"><![CDATA[#{taskBatch},]]></if>
 			</trim>
+			ON DUPLICATE KEY UPDATE
+			<if test="reponseContent!=null">reponse_content=#{reponseContent},</if>
+			<if test="mark!=null">mark=#{mark},</if>
+			<if test="reponseStatus!=null">reponse_status=#{reponseStatus},</if>
+			update_time = now()
+			
+			
 	</insert>
 
 	<!-- 返回插入的编号,在事务开启状态下有效 -->

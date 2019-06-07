@@ -49,15 +49,15 @@ public class CtripHotelInfoServiceImpl extends BaseServiceImpl<CtripHotelInfoDO,
 
 	@Override
 	public int insertOrUpdate(CtripHotelInfoDO info) {
-		CtripHotelInfoDO selectByPrimaryKey = super.selectByPrimaryKey(info.getId());
-		if(selectByPrimaryKey!=null) {
-			return 0;
+//		CtripHotelInfoDO selectByPrimaryKey = super.selectByPrimaryKey(info.getId());
+//		if(selectByPrimaryKey!=null) {
+//			return 0;
 //			if(!StringUtils.isEmpty(selectByPrimaryKey.getHtladdress())) {
 //				info.setHtladdress(null);
 //			}
 //			info.setMark(null);
 //			return updateByPrimaryKeySelective(info);
-		}
+//		}
 		return insertSelective(info);
 	}
 	

@@ -1,9 +1,15 @@
 package com.fcang.spider.hotel.provider.biz;
 
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +21,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.fcang.spider.hotel.core.AjaxCtripCityHotelListUtil;
 import com.fcang.spider.hotel.core.BaseFullResponse;
 import com.fcang.spider.hotel.core.ConstantVar;
+import com.fcang.spider.hotel.core.CtripHotelHtmlUtil;
 import com.fcang.spider.hotel.core.DateUtil;
 import com.fcang.spider.hotel.domain.pojo.CtripCityDO;
 import com.fcang.spider.hotel.domain.pojo.CtripHotelInfoDO;
@@ -45,8 +52,12 @@ public class CtriptHotelListSpiderBiz {
 	JedisLocker jedisLocker;
 
 	
+	static final String[] CITY_UPDATE_ARRAY= {"广州","武汉","深圳","南昌"};
+	static final Set<String> CITY_UPDATE_SET = new HashSet<>(Arrays.asList(CITY_UPDATE_ARRAY));
+	
 	public void runCityFromDB() {
 		CtripCityDO condtion = new CtripCityDO();
+		condtion.setMark("ctrip_update");
 		PageHelper.startPage(1, 1000, false).setOrderBy("type asc,id desc");
 		List<CtripCityDO> selectEntryList = ctripCityService.selectEntryList(condtion);
 		PageHelper.clearPage();
@@ -69,30 +80,37 @@ public class CtriptHotelListSpiderBiz {
 			}
 		}
 	}
-	
+	//直接爬取city酒店，然后遍历列表更新数据库单个酒店
 	public void runCity(CtripCityDO cityDO) {
 		int i = 1;
 		int totel = 5000;
 		CtripCityDO city = new CtripCityDO();
 		city.setId(cityDO.getId());
 		while(i<=totel) {
+			LOGGER.info("run ctrip ，city:{}，i:{},size:{}",cityDO.getCity(),i);
 			int currentPage = i;
-			i++;
-			String redisCityKey = "city:"+cityDO.getId()+"";
+			String redisCityKey ="ctrip:"+DateFormatUtils.format(new Date(), "yyyyMMdd")+":city:"+cityDO.getCity()+"";
 			String hget = jedis.hget(redisCityKey, currentPage+"");
+			i++;
 			if("25".equals(hget)) {
+				continue;
+			}
+			if(hget!=null&&Integer.valueOf(hget)>5) {
 				continue;
 			}
 			String totelStr = jedis.hget(redisCityKey, "totel");
 			if(totelStr!=null) {
 				totel = Integer.valueOf(totelStr);
+				if(currentPage>totel) {
+					break;
+				}
 			}
-			//BaseFullResponse<List<CtripHotelInfoDO>> res = CtripHotelHtmlUtil.buildLocalHotellist(pageListUrl);
 			BaseFullResponse<Collection<CtripHotelInfoDO>> res = AjaxCtripCityHotelListUtil.ajaxCityHotelList(currentPage, cityDO.getId(),cityDO.getCode());
 			if(!res.isSuccess()) {
 				jedis.hset(redisCityKey, currentPage+"", "0");
 				continue;
 			}
+			
 			Collection<CtripHotelInfoDO> jsonArray = res.getData();
 			if(totelStr==null) {
 				Integer pages = Integer.valueOf(res.getMessage());
@@ -100,7 +118,7 @@ public class CtriptHotelListSpiderBiz {
 			}
 			if(!CollectionUtils.isEmpty(jsonArray)) {
 				if(jsonArray.size()!=25) {
-					LOGGER.error("少于25个酒店，city:{}，currentPage:{}",cityDO.getId(),currentPage);
+					LOGGER.error("!=25个酒店，city:{}，currentPage:{},size:{}",cityDO.getId(),currentPage,jsonArray.size());
 				}
 				jsonArray.forEach(hotel->{
 					hotel.setCity(cityDO.getCity());
@@ -108,7 +126,7 @@ public class CtriptHotelListSpiderBiz {
 					hotel.setCityCode(cityDO.getCode());
 					hotel.setOriginalPage(currentPage);
 					hotel.setMark(ConstantVar.INIT_SUCCESS);
-					hotel.setUpdateTime(DateUtil.plusDaysToDate(new Date(), -40));
+					hotel.setUpdateTime(new Date());
 					ctripHotelInfoService.insertOrUpdate(hotel);
 				});
 				city.setType(currentPage);

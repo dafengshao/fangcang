@@ -1,5 +1,6 @@
 package com.fcang.spider.hotel.domain.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -32,6 +33,7 @@ public class FliggyHotelServiceImpl extends BaseServiceImpl<FliggyHotelDO, Long>
 	public int insertOrUpdatePrice(FliggyHotelDO hotelDO) {
 		FliggyHotelDO selectByPrimaryKey = super.selectByPrimaryKey(hotelDO.getId());
 		if(selectByPrimaryKey==null) {
+			hotelDO.setCreateTime(new Date());
 			return super.insertSelective(hotelDO);
 		}else {
 			FliggyHotelDO upd = new FliggyHotelDO();
@@ -44,6 +46,7 @@ public class FliggyHotelServiceImpl extends BaseServiceImpl<FliggyHotelDO, Long>
 			upd.setCity(hotelDO.getCity());
 			upd.setCityId(hotelDO.getCityId());
 			upd.setCityCode(hotelDO.getCityCode());
+			hotelDO.setUpdateTime(new Date());
 			return super.updateByPrimaryKeySelective(upd);
 		}
 	}

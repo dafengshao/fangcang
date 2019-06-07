@@ -59,7 +59,7 @@ public class CtripHotelRoomBiz {
 		if(PhantomjsLoader.isWindows) {
 			orderby = "update_time desc,create_time desc";
 		}
-		PageHelper.startPage(1,50,false).setOrderBy(orderby);
+		PageHelper.startPage(1,20,false).setOrderBy(orderby);
 		List<CtripHotelInfoDO> selectEntryList = ctripHotelInfoService.selectEntryList(condtion );
 		PageHelper.clearPage();
 		if(CollectionUtils.isEmpty(selectEntryList)) {

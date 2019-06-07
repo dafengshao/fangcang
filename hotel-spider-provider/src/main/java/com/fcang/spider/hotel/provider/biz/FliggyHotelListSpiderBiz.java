@@ -36,7 +36,10 @@ public class FliggyHotelListSpiderBiz {
 	FliggyHotelHtmlUtil fliggyHotelHtmlUtil;
 	@Autowired
 	CityHotelAssemService cityHotelAssemService;
+	@Autowired
+	FliggyHotelInfoBiz fliggyHotelInfoBiz;
 	public void run(){
+		fliggyHotelInfoBiz.run();
 		AreaDO condtion = new AreaDO();
 		//condtion.setLevel(4);
 		condtion.setStatusCode("0");
@@ -69,6 +72,7 @@ public class FliggyHotelListSpiderBiz {
 	
 		while(true){
 			int currentPage = pageNo;
+			//今天已经处理
 			CityHotelAssemDO uniq = cityHotelAssemService.getUniq(1, cityId, cityCode, currentPage, pageSize,JsoupUtil.getBatchInfo());
 			if(uniq!=null&&uniq.getReponseContent()!=null) {
 				JSONObject parse = (JSONObject)JSONObject.parse(uniq.getReponseContent());
@@ -88,6 +92,7 @@ public class FliggyHotelListSpiderBiz {
 			}
 			newAssem.setReponseStatus(0);
 			newAssem.setRequestType(1);
+			newAssem.setMark("feizhu");
 			newAssem.setCityCode(cityCode);
 			newAssem.setCityId(cityId);
 			newAssem.setCurrentPage(currentPage);

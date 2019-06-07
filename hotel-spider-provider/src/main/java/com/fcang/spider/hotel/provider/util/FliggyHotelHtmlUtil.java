@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -20,17 +19,15 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.fcang.spider.hotel.core.BaseFullResponse;
+import com.fcang.spider.hotel.core.CommonUtil;
 import com.fcang.spider.hotel.core.DateUtil;
 import com.fcang.spider.hotel.core.JsoupUtil;
-import com.fcang.spider.hotel.core.ProxyInfo;
 import com.fcang.spider.hotel.domain.pojo.AreaDO;
-import com.fcang.spider.hotel.domain.pojo.CtripHotelInfoDO;
 import com.fcang.spider.hotel.domain.pojo.FliggyCityDO;
 import com.fcang.spider.hotel.domain.pojo.FliggyHotelDO;
 import com.fcang.spider.hotel.domain.service.AreaService;
 import com.fcang.spider.hotel.domain.service.FliggyCityService;
 import com.fcang.spider.hotel.provider.biz.ProxyProviderBiz;
-import com.google.gson.JsonObject;
 @Component
 public class FliggyHotelHtmlUtil {
 	static final Logger  logger = LoggerFactory.getLogger(FliggyHotelHtmlUtil.class);
@@ -46,7 +43,7 @@ public class FliggyHotelHtmlUtil {
 	AreaService areaService;
 	public static void buildHotellist() {
 		Map<String,String> headers = new HashMap<>();
-		headers.put("Cookie", "cna=x0aFFGIWTUwCAd7UjEKEB+on; UM_distinctid=167bef5abc1324-0fbc8ce5629638-3f674706-e1000-167bef5abc237f; hng=CN%7Czh-cn%7CCNY; lid=%E9%80%80%E4%BA%86%E4%BC%91%E7%9A%84%E6%B5%B7%E7%9B%97; t=ba02d76245161a32ca852f29328ae783; tracknick=%5Cu9000%5Cu4E86%5Cu4F11%5Cu7684%5Cu6D77%5Cu76D7; _tb_token_=ea7e4044071e3; cookie2=1906e62b99c860d27f0cf85d3c34df40; CNZZDATA1253581663=1062597565-1545096121-https%253A%252F%252Fwww.fliggy.com%252F%7C1545226009; chanelStat=\"NA==\"; chanelStatExpire=\"2018-12-22 22:08:25\"; dnk=%5Cu9000%5Cu4E86%5Cu4F11%5Cu7684%5Cu6D77%5Cu76D7; uc1=cookie16=U%2BGCWk%2F74Mx5tgzv3dWpnhjPaQ%3D%3D&cookie21=V32FPkk%2FgPzW&cookie15=WqG3DMC9VAQiUQ%3D%3D&existShop=false&pas=0&cookie14=UoTYM8RppflgoQ%3D%3D&tag=8&lng=zh_CN; _l_g_=Ug%3D%3D; unb=368723234; cookie1=BdM0m8qWjiixi5iEbs8DK7EZUQsz57YAMaZD4jkdDPo%3D; login=true; cookie17=UNaPBxr9YlLV; _nk_=%5Cu9000%5Cu4E86%5Cu4F11%5Cu7684%5Cu6D77%5Cu76D7; sg=%E7%9B%9747; csg=743c7b3b; _uab_collina=154523132015191639131327; x5sec=7b226873703b32223a223033626563316435336439656433343066393937373230323431303566656338434b6932366541464550376f353872716e756e5273414561437a4d324f4463794d7a497a4e447378227d; JSESSIONID=C10C26359DCDB19BC3F4FED504D5FC94; isg=BP__hMuHnywGg5syzsRWPCBsjtNJTFP6ArAe7ZHMm671oB8imbTj1n2y5zD7-Cv-");
+		headers.put("Cookie", "t=8f438a9345c98061691fe0f5acfb1eac; _tb_token_=e64675b36a3ee; cookie2=1e0737d7d5f5ebf986372e4fdcb88e1d; hng=CN%7Czh-cn%7CCNY; tracknick=%5Cu9000%5Cu4E86%5Cu4F11%5Cu7684%5Cu6D77%5Cu76D7; _l_g_=Ug%3D%3D; ck1=\\\"\\\"; unb=368723234; lgc=%5Cu9000%5Cu4E86%5Cu4F11%5Cu7684%5Cu6D77%5Cu76D7; cookie1=BdM0m8qWjiixi5iEbs8DK7EZUQsz57YAMaZD4jkdDPo%3D; login=true; cookie17=UNaPBxr9YlLV; _nk_=%5Cu9000%5Cu4E86%5Cu4F11%5Cu7684%5Cu6D77%5Cu76D7; uss=\\\"\\\"; chanelStat=\\\"NA==\\\"; chanelStatExpire=\\\"2019-03-28 19:23:51\\\"; UM_distinctid=169b497e1de7a-0a5e2f527a0b1e-5b402d18-e1000-169b497e1df656; cna=sL4EFXvq0BYCAd7UVxW1cZHy; uc1=cookie16=V32FPkk%2FxXMk5UvIbNtImtMfJQ%3D%3D&cookie21=Vq8l%2BKCLjA%2Bl&cookie15=UIHiLt3xD8xYTw%3D%3D&existShop=false&pas=0&cookie14=UoTZ50xbqRnsaw%3D%3D&tag=8&lng=zh_CN; uc3=vt3=F8dByEndrOoOJ6UgjqQ%3D&id2=UNaPBxr9YlLV&nk2=rq7bqHDDomg1hc2i&lg2=V32FPkk%2Fw0dUvg%3D%3D; csg=0ca965e8; skt=d477ab13a906a883; JSESSIONID=D5B9DF8EF813FDD005DA62287F690A24; x5sec=7b226873703b32223a223231346562653366383161616535363261313138366337373663333538336539434d4c3434755146454d6a416c6444476e667a6668514561437a4d324f4463794d7a497a4e447378227d; CNZZDATA1253581663=1669381930-1553507778-%7C1553509687; l=bBxbf6pHvAgR904FBOCNquIJfUQtKIRVguPRwhkJi_5d5_L_MubOlOn-gEp6Vj5P9CYB41JZdowTreFQ-yJf.; isg=BFlZfZcCYVAbBT3EUeiN8SB3aEXzTl4uwIqLYnsOkwD-gnsUwzbVaeyUhAZROuXQ");
 		int i = 1;
 		while(true) {
 			String url =URL_FORM+(i++);
@@ -179,9 +176,9 @@ public class FliggyHotelHtmlUtil {
 	static Map<String,String> headers = new HashMap<>();
 	static {
 		headers.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
-		headers.put("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
+		//headers.put("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)");
 		headers.put("Referer", "https://hotel.fliggy.com");
-		//headers.put("Cookie", "cna=x0aFFGIWTUwCAd7UjEKEB+on; UM_distinctid=167bef5abc1324-0fbc8ce5629638-3f674706-e1000-167bef5abc237f; hng=CN%7Czh-cn%7CCNY; lid=%E9%80%80%E4%BA%86%E4%BC%91%E7%9A%84%E6%B5%B7%E7%9B%97; _uab_collina=154523132015191639131327; VISITED_HOTEL_TOKEN=533bfcfb-6c94-41b1-9817-9ea8173f66a9; t=ba02d76245161a32ca852f29328ae783; tracknick=%5Cu9000%5Cu4E86%5Cu4F11%5Cu7684%5Cu6D77%5Cu76D7; _tb_token_=e71e97ebf3b73; cookie2=1848b5c20c383503064a95bdc00b8bfd; chanelStat=\"NA==\"; chanelStatExpire=\"2018-12-25 01:41:33\"; CNZZDATA1253581663=1062597565-1545096121-https%253A%252F%252Fwww.fliggy.com%252F%7C1545410898; _l_g_=Ug%3D%3D; ck1=\"\"; unb=368723234; lgc=%5Cu9000%5Cu4E86%5Cu4F11%5Cu7684%5Cu6D77%5Cu76D7; cookie1=BdM0m8qWjiixi5iEbs8DK7EZUQsz57YAMaZD4jkdDPo%3D; login=true; cookie17=UNaPBxr9YlLV; _nk_=%5Cu9000%5Cu4E86%5Cu4F11%5Cu7684%5Cu6D77%5Cu76D7; uss=\"\"; x5sec=7b226873703b32223a226461643434656464633964663236646332386635663330663935396439356266434d7a4e394f41464549756b76725034752f37496e514561437a4d324f4463794d7a497a4e447378227d; uc1=cookie16=W5iHLLyFPlMGbLDwA%2BdvAGZqLg%3D%3D&cookie21=UtASsssme%2BBq&cookie15=UIHiLt3xD8xYTw%3D%3D&existShop=false&pas=0&cookie14=UoTYM8KAAzQ5MA%3D%3D&tag=8&lng=zh_CN; uc3=vt3=F8dByRMDCLFuIcK3ja4%3D&id2=UNaPBxr9YlLV&nk2=rq7bqHDDomg1hc2i&lg2=VT5L2FSpMGV7TQ%3D%3D; csg=8d93005e; skt=38228ef19fb2831a; JSESSIONID=4F3C32A21277E834FFA9B6F40C163D34; l=aB0fv0MKyFflz_BBLMa4gVQQY707gyZzI_SY1MaH8TEhNPIwDjCL1KnU-VwWK_qC5J9L_K-59; isg=BMLCss2EKoCPiDbZc3PDR9VzE8jkO8erFx_zRgzb6zXiX2LZ9CA8vYidCxuGCz5F");
+		headers.put("Cookie", "cna=8HEnFYZpTU8CAavfYCrmql7J; t=b087c6c10b4d98736b3642691c2a2cef; _tb_token_=KJMkDhXC3fhiVnFShrq3; cookie2=19dd70cd4dba8b1a335d227b7154bafe; UM_distinctid=169d3f200b73e8-0747552ccd03e8-5b402d18-e1000-169d3f200b8441; chanelStat=\"NA==\"; chanelStatExpire=\"2019-04-03 21:31:36\"; CNZZDATA1253581663=1898299949-1554035585-https%253A%252F%252Fwww.fliggy.com%252F%7C1554040995; isg=BBAQyUIOeDMXuyQ3eiy8h0e14V6icfUk4e2yaQrh12s8RbDvs-iUsym0HU0Akqz7; l=bBPk-xDnv2L-cX0KBOCNCuI8L1_TjIRA_uPRwCmMi_5CF1Y1gSbOliUfIev6Vj5R_3Tp41JZdow9-etow; JSESSIONID=FD4843F96DE4598362CE1DCEA59BB00C");
 		headers.put("DNT", "1");
 		headers.put("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
 	}
@@ -209,14 +206,14 @@ public class FliggyHotelHtmlUtil {
 					.replaceAll("ppIppp", "222.212.87.21")
 					;//+param;
 			headers.put("Referrer", "http://hotel.fliggy.com/hotel_list3.htm?city="+cityCode+"&"+System.currentTimeMillis());
-			headers.put("user-agent", JsoupUtil.getUserAgent());
+			//headers.put("user-agent", JsoupUtil.getUserAgent());
 			logger.info("buildNormal,url:{}",format);
 			buildByUrl = JsoupUtil.buildByUrl(format
 					, null, headers, null );
 			if(!buildByUrl.isSuccess()) {
 				logger.error("JsoupUtil.buildByUrl fail.url:{}/n,res:{}",url,buildByUrl);
 				continue;
-			}else {
+			}else{
 				break;
 			}
 		}

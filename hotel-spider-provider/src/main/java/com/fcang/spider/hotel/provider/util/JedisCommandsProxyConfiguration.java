@@ -21,7 +21,7 @@ public class JedisCommandsProxyConfiguration {
 		poolConfig.setMinIdle(2);
 		poolConfig.setMaxTotal(4);
 	}
-    private JedisPool jedisPool = new JedisPool(poolConfig,"39.108.73.131", 6379,5000,"fangcang@@admin",0);
+    private JedisPool jedisPool = new JedisPool(poolConfig,"127.0.0.1", 6379);//,5000,"foobared");
 	
 	@Bean
 	public JedisCommands jedis() {

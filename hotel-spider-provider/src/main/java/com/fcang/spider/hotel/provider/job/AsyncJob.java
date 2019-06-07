@@ -13,12 +13,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
+import com.fcang.spider.hotel.core.CommonUtil;
 import com.fcang.spider.hotel.provider.biz.CtripHotelRoomBiz;
 import com.fcang.spider.hotel.provider.biz.CtriptHotelListSpiderBiz;
 import com.fcang.spider.hotel.provider.biz.FliggyHotelInfoBiz;
 import com.fcang.spider.hotel.provider.biz.FliggyHotelListSpiderBiz;
 import com.fcang.spider.hotel.provider.biz.MeituanHotelListSpiderBiz;
 import com.fcang.spider.hotel.provider.util.JedisLocker;
+import com.fcang.spider.hotel.provider.util.JedisLocker.OwnerLock;
 @Component
 public class AsyncJob {
 	private static final Logger logger = LoggerFactory.getLogger(AsyncJob.class);
@@ -26,7 +28,7 @@ public class AsyncJob {
 	@Bean
 	public TaskScheduler taskScheduler() {
 	    ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
-	    taskScheduler.setPoolSize(3);
+	    taskScheduler.setPoolSize(4);
 	    return taskScheduler;
 	}
   
@@ -43,22 +45,21 @@ public class AsyncJob {
 	
 	@Autowired
 	JedisLocker jedisLocker;
-	
 	static final Lock lock = new ReentrantLock();
 	static final Lock lockDetail = new ReentrantLock();
 	/**
 	 * 飞猪酒店列表
 	 */
-	//@Scheduled(cron="0 26 1 ? * *")   //"0/5 * *  * * ? "每5秒执行一次  "0 15 2 ? * *"    每天早上2：15触发 
-	public void runCityHotelList() {
+	//@Scheduled(cron="0/5 * * * * *") 
+	public void runFeizhuCityHotelList() {
 		try {
 			boolean tryLock = lock.tryLock();
 			if(!tryLock) {
 				return;
 			}
-			logger.info("runCityHotelList start");
+			logger.info("runFeizhuCityHotelList start");
 			fliggyHotelListSpiderBiz.run();
-			logger.info("runCityHotelList over");
+			logger.info("runFeizhuCityHotelList over");
 		}finally {
 			lock.unlock();
 		}
@@ -67,17 +68,25 @@ public class AsyncJob {
 	
 	
 	
+	
 	/**
 	 * 携程城市酒店列表
+	 * 0 0 0/1 * * ?
+	 * 0 0 0/2 * * ?
+	 * 0/5 * * * * *
 	 */
+		
+	
 	@Scheduled(cron="0/5 * * * * *") 
-	public void runFromDB() {
+	public void runCtripCityFromDB() {
 		try {
 			boolean tryLock = lockDetail.tryLock();
 			if(!tryLock) {
 				return;
 			}
 			logger.info("hotelListSpiderBiz.runFromDB start");
+			CommonUtil.put("start", "2019-06-07");
+			CommonUtil.put("end", "2019-06-08");
 			hotelListSpiderBiz.runCityFromDB();
 			logger.info("hotelListSpiderBiz.runFromDB over");
 		}finally {
@@ -89,7 +98,7 @@ public class AsyncJob {
 	/**
 	 * 携程酒店详情
 	 */
-	//@Scheduled(cron="0/5 * * * * ? ")
+	@Scheduled(cron="0/5 * * * * *") 
 	public void runCtripHtmlDownload() {
 		try {
 			boolean tryLock = runCtripHtmlDownloadLock.tryLock();
@@ -108,36 +117,38 @@ public class AsyncJob {
 		}
 		
 	} 
-	static final Lock runCtripParseHtmlFileLock = new ReentrantLock();
-	//@Scheduled(cron="0/5 * * * * ? ")
-	public void runCtripParseHtmlFile() {
-		try {
-			boolean tryLock = runCtripParseHtmlFileLock.tryLock();
-			if(!tryLock) {
-				return;
-			}
-			logger.info("ctripHotelRoomBiz.runCtripParseHtmlFile start");
-			while(!Thread.interrupted()) {
-				ctripHotelRoomBiz.runByHarddisk();
-			}
-			logger.info("ctripHotelRoomBiz.runCtripParseHtmlFile over");
-		} catch (Exception e) {
-			logger.error("",e);
-		}finally {
-			runCtripParseHtmlFileLock.unlock();
-		}
-		
-	}
+	
 	@Autowired
 	MeituanHotelListSpiderBiz  meituanHotelListSpiderBiz;
-	//@Scheduled(cron="0/5 * * * * ? ")
+	final static Long i = System.currentTimeMillis();
+	@Scheduled(cron="0/5 * * * * ? ")
 	public void runMeituanCity() {
-		meituanHotelListSpiderBiz.runCityFromDB();
+		OwnerLock lock2 = jedisLocker.lock("runMeituanCity"+i, 1000*3600*50);
+		if(lock2==null) {
+			return;
+		}
+		try {
+			logger.info("meituanHotelListSpiderBiz.runMeituanCity start");
+			CommonUtil.put("start", "20190607");
+			CommonUtil.put("end", "20190608");
+			meituanHotelListSpiderBiz.runCityFromDB();
+		}finally {
+			lock2.release();
+		}
+	}
+	@Scheduled(cron="0/5 * * * * ? ")
+	public void runMeituanDetailPage() {
+		OwnerLock lock2 = jedisLocker.lock("runMeituanDetailPage"+i, 1000*3600);
+		if(lock2==null) {
+			return;
+		}
+		try {
+			logger.info("meituanHotelListSpiderBiz.hanldMeituanDetailPage start");
+			meituanHotelListSpiderBiz.hanldMeituanDetailPage();
+		}finally {
+			lock2.release();
+		}
 	}
 	
-	@Scheduled(cron="0/5 * * * * ? ")
-	public void runMeituanHotelDetail() {
-		meituanHotelListSpiderBiz.runMeituanHotelDetail();
-	}
 	
 }

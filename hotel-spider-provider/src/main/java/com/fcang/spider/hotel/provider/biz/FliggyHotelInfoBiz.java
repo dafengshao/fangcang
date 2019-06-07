@@ -32,19 +32,26 @@ public class FliggyHotelInfoBiz {
 	@Autowired
 	Executor providerSimpleAsync;
 
-	
 	public void run() {
+		providerSimpleAsync.execute(()->{runCityHotelAssem();});
+	}
+	public void runCityHotelAssem() {
 		int pageSize = 8;
 		int pageNum = 1;
 		CityHotelAssemDO condtion = new CityHotelAssemDO();
 		condtion.setReponseStatus(1);
 		condtion.setRequestType(1);
-		condtion.setTaskBatch("2018-12-25");
-		while(true){
+		while(!Thread.interrupted()){
 			PageHelper.startPage(pageNum++ , pageSize,false).setOrderBy("update_time asc");
 			List<CityHotelAssemDO> selectEntryList = cityHotelAssemService.selectEntryList(condtion );
 			if(CollectionUtils.isEmpty(selectEntryList)) {
-				break;
+				try {
+					Thread.sleep(20000L);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+					
+				}
+				continue;
 			}
 			CountDownLatch latch = new CountDownLatch(selectEntryList.size());
 			//开启多线程

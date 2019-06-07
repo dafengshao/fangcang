@@ -78,7 +78,7 @@
 		<appender-ref ref="FliggyHotelListSpiderBizAppender" />
 	</logger> -->
 	<logger name="com.fcang.spider.hotel.domain.mapper" level="DEBUG" 
-	additivity="true">
+	additivity="false">
 		<appender-ref ref="sqlLaunchAppender" />
 	</logger>
 	
@@ -99,8 +99,8 @@ ip：39.108.73.131
 数据库：
 端口：3306
 用户密码：pachong/fdsa3@@fd*&@fd root
- nohup>nohup.log java -Xms512m -Xmx512m -jar hotel-spider-provider-0.1.1-SNAPSHOT.jar 2>&1 &
-
+ nohup>nohup.log java -Xms256m -Xmx256m -jar hotel-spider-provider-0.1.1-SNAPSHOT.jar 2>&1 &
+kill -9 25952
 root/Mengmeng520
 redis.password=fangcang@@admin
 -->

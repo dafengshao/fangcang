@@ -23,19 +23,24 @@ public class AjaxCtripCityHotelListUtil {
 	static {
 		herders.put("Referer", "http://hotels.ctrip.com/hotel/wuhan477#ctm_ref=hod_hp_sb_lst");
 		herders.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
-		herders.put("Cookie", "_RGUID=02cc4dff-888c-4764-b2fd-e5a30e2e8df6; _RSG=aT4Z8.VJCB0steBECQvzBB; _RDG=286d8cf82a7c492d412281051417c943d1; _abtest_userid=f9073d77-5f27-4323-af04-81476e64eddc; _ga=GA1.2.776580256.1547047482; _gid=GA1.2.763056674.1547047482; MKT_Pagesource=PC; gad_city=be2e953e1ae09d16d9cc90a550611388; HotelCityID=477split%E6%AD%A6%E6%B1%89splitWuhansplit2019-01-10split2019-01-11split0; appFloatCnt=29; manualclose=1; _RF1=125.69.43.13; HotelDomesticVisitedHotels1=0=0,,0,0,,&6547475=0,0,4.5,377,/200d0v000000k1xs4D77E.jpg,&858509=0,0,4.3,1059,/20010n000000eoq87D00A.jpg,&8446971=0,0,4.3,417,/20070k000000crhezF4F0.jpg,&444966=0,0,4.5,5287,/20020i0000009gkue3ACF.jpg,&7104977=0,0,4.8,1488,/20060e00000075r4nD8FC.jpg,; ASP.NET_SessionId=ehl4ffnsqaltceovld4lisya; _bfa=1.1547047479551.2nb3gg.1.1547123773076.1547138029942.7.55; _bfs=1.4; OID_ForOnlineHotel=15470474795512nb3gg1547138540857102032; _gat=1; MKT_OrderClick=ASID=&CT=1547138543257&CURL=http%3A%2F%2Fhotels.ctrip.com%2Fhotel%2Fwuhan477%2Fp205&VAL={\"pc_vid\":\"1547047479551.2nb3gg\"}; _jzqco=%7C%7C%7C%7C1547138032478%7C1.1082763304.1547047482301.1547138045437.1547138543293.1547138045437.1547138543293.undefined.0.0.42.42; __zpspc=9.7.1547138032.1547138543.3%234%7C%7C%7C%7C%7C%23; _bfi=p1%3D102032%26p2%3D0%26v1%3D55%26v2%3D0");
+		herders.put("Cookie", "_RGUID=ce41e682-e1ba-425a-8924-f03193acd279; _RSG=Q9akXBev1vCv9DhJ63yaa8; _RDG=28a1015357157f287f195810868a4b1c5e; _abtest_userid=6e7d3f8f-bb26-482c-a20a-1df99f6f8ece; _ga=GA1.2.330543646.1553959473; _gid=GA1.2.791890995.1553959473; _RF1=171.223.96.42; MKT_Pagesource=PC; clientid=51482090410033771081; ASP.NET_SessionId=uwfapl2qgbpggts3c5fzntqj; gad_city=be2e953e1ae09d16d9cc90a550611388; appFloatCnt=6; HotelCityID=2split%E4%B8%8A%E6%B5%B7splitShanghaisplit2019-03-31split2019-04-01split0; _bfa=1.1553959381345.3u5c9f.1.1553959381345.1553962841208.2.17; _bfs=1.4; _bfi=p1%3D102002%26p2%3D102001%26v1%3D17%26v2%3D16; _jzqco=%7C%7C%7C%7C1553959473389%7C1.268222438.1553959473337.1553960109553.1553962917649.1553960109553.1553962917649.undefined.0.0.3.3; __zpspc=9.2.1553962917.1553962917.1%234%7C%7C%7C%7C%7C%23; OID_ForOnlineHotel=15539593813453u5c9f1553962919618102002");
 	}
 	public static BaseFullResponse<Collection<CtripHotelInfoDO>> ajaxCityHotelList(Integer page,Long cityId,String cityCode) {
-		Date start = DateUtil.plusDaysToDate(new Date(),1);
-		Date end = DateUtil.plusDaysToDate(new Date(),2);
-		String startDateStr = DateFormatUtils.format(start,"yyyy-MM-dd");
-		String endDateStr = DateFormatUtils.format(end,"yyyy-MM-dd");
+		String startDateStr = (String)CommonUtil.get("start");
+		String endDateStr = (String)CommonUtil.get("end");
+		if(startDateStr==null) {
+			Date start = DateUtil.plusDaysToDate(new Date(),1);
+			Date end = DateUtil.plusDaysToDate(new Date(),2);
+			startDateStr = DateFormatUtils.format(start,"yyyy-MM-dd");
+			endDateStr = DateFormatUtils.format(end,"yyyy-MM-dd");
+		}
 		Map<String, String> parm = new HashMap<>();
 		parm.put("StartTime", startDateStr);
 		parm.put("DepTime", endDateStr);
 		parm.put("checkIn", startDateStr);
 		parm.put("checkOut", endDateStr);
 		parm.put("cityId", cityId+"");
+		parm.put("__VIEWSTATEGENERATOR", "DB1FBB6D");
 		parm.put("page", page+"");
 		parm.put("cityPY", cityCode.toLowerCase());
 		parm.put("IsOnlyAirHotel", "F");
@@ -59,18 +64,17 @@ public class AjaxCtripCityHotelListUtil {
 		parm.put("isHuaZhu", "False");
 		parm.put("ubt_price_key", "htl_search_noresult_promotion");
 		parm.put("hidTestLat", "0%7C0");
-		parm.put("traceAdContextId", "v2_H4sIAAAAAAAAAD3Mu20CQRCAYchcg0N0kcVIs%2FPcIaSR0z5uY3pw7oBC6MItuB5Oh7n0%2B6X%2F4%2B9x%2F%2F2Gz5%2Bju4rM7dZmo4jMNqeLuJ9XV9xcmTXLzhnzxiKZdGdOyTYOthTJ345qsXkiQ1ai%2F6BM8dpLqHvil58OX1PrZRUcUEZbQDoS1MEO5rFUWZR7OB4vk43GpXCBpXUCqSJQLTqMhlYZjTK36%2BEJHduHE%2BoAAAA%3D");
+		parm.put("traceAdContextId", "v2_H4sIAAAAAAAAAD3PO04DQRBFUTtjDYTIEaKk%2Bn8cspFRe3o6Zhdsgt2RkiMypG5welS6T%2FXw%2Fv318wGPn2fCIJRtf9s3pTKpja78QugYNZXN0shsepWkTk6KTP6%2FRiefTIRcpn%2FMErFYIlFpNSzUloZJmvN9Unm6iaGudCnyQqZgt8TJaRa02FU9Su4NX8%2B4SKhMfjo9X7hkjNKE8LaDFhO0wTscYZ37Mbwn4%2Fl6CepN%2B%2BGAGgza5QatWodqgj440cbt9fQLz5zjfz8BAAA%3D");
 		BaseFullResponse<Document> buildByUrl = JsoupUtil.buildByUrl(url, parm, herders , null);
 		if(buildByUrl.isSuccess()) {
 			Document data = buildByUrl.getData();
 			String html = data.body().html();
 			String hotelAmountStr = html.substring(html.indexOf("hotelAmount"), html.indexOf("sortHeader"));
 			hotelAmountStr = hotelAmountStr.substring(hotelAmountStr.indexOf(":")+1, hotelAmountStr.indexOf(",\""));
-			Integer hotelAmount = Integer.valueOf(hotelAmountStr);
 			String hotelPositionJSON = html.substring(html.indexOf("hotelPositionJSON"), html.indexOf("biRecord"));
 			hotelPositionJSON = hotelPositionJSON.substring(hotelPositionJSON.indexOf(":[")+1, hotelPositionJSON.indexOf("],\"")+1);
 			hotelPositionJSON = hotelPositionJSON.replaceAll("\\\\", "|");
-			logger.info("city:{},page:{},returnJSON:{}",cityId,page,hotelPositionJSON);
+			logger.info("city:{},page:{},over",cityId,page);
 			JSONArray jsonArray =JSONObject.parseArray(hotelPositionJSON);
 			String hotelListHtml = html.substring(html.indexOf("hotelList"), html.indexOf("paging")-1);
 			hotelListHtml = hotelListHtml.substring(hotelListHtml.indexOf(":\"")+2);

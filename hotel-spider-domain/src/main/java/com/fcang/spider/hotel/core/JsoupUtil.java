@@ -2,14 +2,16 @@ package com.fcang.spider.hotel.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 
-import org.codehaus.jackson.map.util.JSONPObject;
 import org.jsoup.Connection;
+import org.jsoup.Connection.Response;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
-import org.jsoup.Connection.Response;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +56,7 @@ public class JsoupUtil {
 		return connect;
 	}
 	public static BaseFullResponse<Document> buildByUrl(String url,Map<String,String> parm,Map<String,String> herders,ProxyInfo info) {
-		Connection connect = JsoupUtil.connect(url,parm,herders);
+		Connection connect = JsoupUtil.connect(url,parm,herders).timeout(25000);
 		if(info!=null) {
 			connect.proxy(info.getHost(), info.getPort());
 		}
@@ -62,6 +64,12 @@ public class JsoupUtil {
 		try {
 			execute = connect.execute();
 			Document parse = Jsoup.parse(execute.body());
+			/*Elements eles = parse.select("meta[http-equiv=Content-Type]");
+			Iterator<Element> itor = eles.iterator();
+			String 
+			while (itor.hasNext()) 
+				return RegularUtils.matchCharset(itor.next().toString());
+			return "gb2312";*/
 			return BaseFullResponse.success(parse);
 		} catch (HttpStatusException e) {
 			if(e.getStatusCode()==404) {
@@ -69,9 +77,9 @@ public class JsoupUtil {
 			}
 			LOGGER.error("",e);
 			return BaseFullResponse.failed(e.getMessage());
-		}catch (IOException e) {
+		}catch (Exception e) {
 			LOGGER.error("",e);
-			return BaseFullResponse.failed("IOException",e.getMessage());
+			return BaseFullResponse.failed("Exception",e.getMessage());
 		}
 		
 	}
