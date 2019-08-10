@@ -7,8 +7,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Executor;
 
@@ -47,7 +49,7 @@ import com.github.pagehelper.PageHelper;
 import redis.clients.jedis.commands.JedisCommands;
 @Component
 public class MeituanHotelListSpiderBiz {
-	Logger logger = LoggerFactory.getLogger(MeituanHotelListSpiderBiz.class);
+	static Logger logger = LoggerFactory.getLogger(MeituanHotelListSpiderBiz.class);
 	static String MEI_TUAN = "meituan";
 	@Autowired
 	private CtripCityService ctripCityService;
@@ -91,12 +93,15 @@ public class MeituanHotelListSpiderBiz {
 		logger.info("addCity over");
 	}
 	static String cityUrl = "http://hotel.meituan.com/";
-	
+	//https://ihotel.meituan.com/hbsearch/HotelSearch?utm_medium=pc&version_name=999.9&cateId=20
+	//&attr_28=129&uuid=5800CE72372C9CD81BA91141310CDECDA53B0202312905176F979ABEE9D8BC46%401564796250414
+	//&cityId=59&offset=0&limit=20&startDay=20190803&endDay=20190803&q=&sort=defaults&hotelStar=6
+	//&X-FOR-WITH=0K5EDARojgsjLMse7o0UzH6dtEkcVQDiWPYqz2YbVlq6T%2BH9MR0ggp0x8h282bFwpcLvWaVsxUj21Uww473a%2FciHUJhvUDwxczDHzEnyaEmWzUwtKfBXtMd99LzuFiddD%2FQ3hHFKe6tUfU9Ieytulw%3D%3D
 	static String ajaxCityComUrl = "https://ihotel.meituan.com/hbsearch/HotelSearch"
 			+ "?utm_medium=pc&version_name=999.9&cateId=20&attr_28=129"
 			+ "&uuid=uuidValue"
-			+ "&cityId=cityIdValue&offset=offsetValue&limit=40&startDay=dayValue&endDay=dayValue&q=&sort=defaults&X-FOR-WITH=RS072hr7zLMR2%2BfrVR2hlXkZPT7y58rRQZxdpLktCTZkYbQTBKALUDOOSFVyVOFGKxAGC2YgdFvVU5yfRyZW6HHfFvUpOlNNWCdApeEcffEGaQKXs2zoV2BFdJHfTd0DhpA66gLjRkO7dHOlrepxsA%3D%3D";
-	static String uuid  = "FB00B9774C179564E06410C07C20A18E26AC8DE9A2E5EF851BC47EBB116611BF";
+			+ "&cityId=cityIdValue&offset=offsetValue&limit=40&startDay=dayValue&endDay=dayValue&q=&sort=defaults&X-FOR-WITH=0K5EDARojgsjLMse7o0UzH6dtEkcVQDiWPYqz2YbVlq6T%2BH9MR0ggp0x8h282bFwpcLvWaVsxUj21Uww473a%2FciHUJhvUDwxczDHzEnyaEmWzUwtKfBXtMd99LzuFiddD%2FQ3hHFKe6tUfU9Ieytulw%3D%3D";
+	static String uuid  = "5800CE72372C9CD81BA91141310CDECDA53B0202312905176F979ABEE9D8BC46";
 	public void runCityFromDB() {
 		runAssemMeituanHotelDetail();
 		CtripCityDO condtion = new CtripCityDO();
@@ -278,38 +283,41 @@ public class MeituanHotelListSpiderBiz {
 		}
 		return true;
 	}
-	
-	public void hanldMeituanDetailPage() {
-			MeituanHotelInfoDO condtion = new MeituanHotelInfoDO();
-			condtion.setMark("init");
-			String orderby = PhantomjsLoader.isWindows?"id desc":"id asc";
-			while(!Thread.interrupted()) {
-				PageHelper.startPage(1,4,false).setOrderBy(orderby);
-				List<MeituanHotelInfoDO> selectEntryList = meituanHotelInfoService.selectEntryList(condtion);
-				if(CollectionUtils.isEmpty(selectEntryList)) {
-					logger.info("hanldMeituanDetailPage.over");
-					try {
-						Thread.sleep(1000*60*3);
-					} catch (InterruptedException e) {
-						Thread.currentThread().interrupt();
-					}
-					continue;
+	public void hanldMeituanDetailPage(String init) {
+		MeituanHotelInfoDO condtion = new MeituanHotelInfoDO();
+		condtion.setMark(init);
+		String orderby = PhantomjsLoader.isWindows?"id desc":"id asc";
+		while(!Thread.interrupted()) {
+			PageHelper.startPage(1,4,false).setOrderBy(orderby);
+			List<MeituanHotelInfoDO> selectEntryList = meituanHotelInfoService.selectEntryList(condtion);
+			if(CollectionUtils.isEmpty(selectEntryList)) {
+				logger.info("hanldMeituanDetailPage.over");
+				try {
+					Thread.sleep(1000*60*3);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
 				}
-				selectEntryList.forEach(meituanHotelInfoDB->{
-					hanldDetail(meituanHotelInfoDB);
-				});
+				continue;
 			}
-		
-	}
+			selectEntryList.forEach(meituanHotelInfoDB->{
+				hanldDetail(meituanHotelInfoDB);
+			});
+		}
+	
+}
+	/*public void hanldMeituanDetailPage() {
+		hanldMeituanDetailPage("init");
+	}*/
 //https://hotel.meituan.com/2387965
 	@Autowired
 	MeituanHotelDetailService meituanHotelDetailService;
 	private void hanldDetail(MeituanHotelInfoDO meituanHotelInfoDO) {
 		Long id = meituanHotelInfoDO.getId();
-		MeituanHotelInfoDO updateHotelInfoDO = new MeituanHotelInfoDO();
-		updateHotelInfoDO.setId(id);
 		String url = "https://hotel.meituan.com/"+id;
-		BaseFullResponse<Document> buildByUrlRes = JsoupUtil.buildByUrl(url, null, null, null );
+		JsoupUtil.setKV("cookie", "__mta=222780964.1563988511753.1563988511753.1564793593988.2; iuuid=5800CE72372C9CD81BA91141310CDECDA53B0202312905176F979ABEE9D8BC46; ci=59; cityname=%E6%88%90%E9%83%BD; _lxsdk_cuid=16c24fa44c09e-068dc1f86e9d7e-e343166-104040-16c24fa44c1c8; _lxsdk=5800CE72372C9CD81BA91141310CDECDA53B0202312905176F979ABEE9D8BC46; uuid=4602a564745841ae943a.1563984841.1.0.0; __mta=222780964.1563988511753.1563988511753.1563988511753.1; hotel_city_id=59; hotel_city_info=%7B%22id%22%3A59%2C%22name%22%3A%22%E6%88%90%E9%83%BD%22%2C%22pinyin%22%3A%22chengdu%22%7D; IJSESSIONID=5qm8729k5m8xdsjvy1yr2sfy; _lxsdk_s=16c54f7269b-2c2-e29-189%7C%7C6");
+		Map<String, String> headers = new HashMap<>();
+		headers.put("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36");
+		BaseFullResponse<Document> buildByUrlRes = JsoupUtil.buildByUrl(url, null, headers, null );
 		if(!buildByUrlRes.isSuccess()) {
 			logger.error("fail,{},buildByUrlRes:{}",url,buildByUrlRes);
 			//updateHotelInfoDO.setMark("error");
@@ -318,6 +326,8 @@ public class MeituanHotelListSpiderBiz {
 		}
 		Document document = buildByUrlRes.getData();
 		Element poiDetail = document.getElementById("poiDetail");
+		MeituanHotelInfoDO updateHotelInfoDO = new MeituanHotelInfoDO();
+		updateHotelInfoDO.setId(id);
 		if(poiDetail==null) {
 			String doc = document.toString();
 			if(doc.contains("refresh")&&doc.contains("www.meituan.com/error/")) {
@@ -357,7 +367,21 @@ public class MeituanHotelListSpiderBiz {
 	}
 	
 	public static void main(String[] args) {
-		
+		String url = "https://hotel.meituan.com/193183852";
+		JsoupUtil.setKV("cookie", "hotel_city_id=1; hotel_city_info=%7B%22id%22%3A1%2C%22name%22%3A%22%E5%8C%97%E4%BA%AC%22%2C%22pinyin%22%3A%22beijing%22%7D; IJSESSIONID=1gnmv664abbxh1813wg69a4vj3; iuuid=403014E92EC807E170DFDD7ED097EB001E6B4F2EE39E4ACF2CB3730873BEC2EC; latlng=30.543696%2C104.058906%2C1564563999535; ci=59; cityname=%E6%88%90%E9%83%BD; _lxsdk_cuid=16c47481006c8-0e63c1c1b6b078-e343166-104040-16c47481006c8; _lxsdk=403014E92EC807E170DFDD7ED097EB001E6B4F2EE39E4ACF2CB3730873BEC2EC; uuid=f548ba38f6714ee38214.1564564001.1.0.0; _lxsdk_s=16c4748100a-7c-303-2e3%7C%7C3");
+		Map<String, String> headers = new HashMap<>();
+		headers.put("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36");
+		//headers.put("Referer","https://hotel.meituan.com/beijing/");
+		BaseFullResponse<Document> buildByUrlRes = JsoupUtil.buildByUrl(url, null, headers , null );
+		if(!buildByUrlRes.isSuccess()) {
+			logger.error("fail,{},buildByUrlRes:{}",url,buildByUrlRes);
+			//updateHotelInfoDO.setMark("error");
+			//meituanHotelInfoService.updateByPrimaryKeySelective(updateHotelInfoDO);
+			return;
+		}
+		Document document = buildByUrlRes.getData();
+		Element poiDetail = document.getElementById("poiDetail");
+		System.out.println(poiDetail);
 	}
 
 	private static void remove(Element eel) {

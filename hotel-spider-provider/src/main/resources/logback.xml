@@ -70,15 +70,15 @@
 	</appender>
 
 
-	<logger name="com.fcang.spider" level="INFO" additivity="true">
+	<logger name="com.fcang.spider" level="WARN" additivity="true">
 		<appender-ref ref="applicationAppender" />
 	</logger>
 	
 	<!-- <logger name="com.fcang.spider.hotel.provider.biz.FliggyHotelListSpiderBiz" level="WARN" additivity="true">
 		<appender-ref ref="FliggyHotelListSpiderBizAppender" />
 	</logger> -->
-	<logger name="com.fcang.spider.hotel.domain.mapper" level="DEBUG" 
-	additivity="false">
+	<logger name="com.fcang.spider.hotel.domain.mapper" level="WARN" 
+	additivity="true">
 		<appender-ref ref="sqlLaunchAppender" />
 	</logger>
 	

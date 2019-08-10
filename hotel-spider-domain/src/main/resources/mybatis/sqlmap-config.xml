@@ -24,6 +24,7 @@
 		<typeAlias type="com.fcang.spider.hotel.domain.pojo.CityHotelAssemDO" alias="cityHotelAssemDO"/>
 		<typeAlias type="com.fcang.spider.hotel.domain.pojo.MeituanHotelInfoDO" alias="meituanHotelInfoDO"/>
 		<typeAlias type="com.fcang.spider.hotel.domain.pojo.MeituanHotelDetailDO" alias="meituanHotelDetailDO"/>
+		<typeAlias type="com.fcang.spider.hotel.domain.pojo.HotelMappingDO" alias="hotelMappingDO"/>
 	</typeAliases>
 	 <plugins>
         <!-- com.github.pagehelper为PageHelper类所在包名 -->

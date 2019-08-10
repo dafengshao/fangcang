@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.jsoup.Connection;
+import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
@@ -24,7 +25,7 @@ public class JsoupUtil {
 	static final Logger LOGGER
 	= LoggerFactory.getLogger(JsoupUtil.class);
 	
-	private static final ThreadLocal<JSONObject> PROXYINFOTHREADLOCAL = new ThreadLocal() ;
+	public static final ThreadLocal<JSONObject> PROXYINFOTHREADLOCAL = new ThreadLocal<>() ;
 	
 	private static final String[] USER_AGENT_S = {"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.835.163 Safari/535.1"
 	,"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:6.0) Gecko/20100101 Firefox/6.0"		
@@ -43,27 +44,37 @@ public class JsoupUtil {
 		Connection connect = Jsoup.connect(aurl);
 		if(headers!=null&&!headers.isEmpty()) {
 			connect.headers(headers );
+		}else {
+			connect.header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+			//
+			connect.header("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1");
 		}
 		if(parm!=null&&!parm.isEmpty()) {
 			connect.data(parm);
+			connect.method(Method.POST);
 		}
 		connect.validateTLSCertificates(false);
 		connect.ignoreContentType(true);
 		connect.timeout(20000);
-		connect.header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
-		connect.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36");
+		
 		//connect.cookie("Cookie", "__mta=245791291.1548293795052.1548293795052.1548309797417.2; uuid=700ecb32a68b494eb519.1548293784.1.0.0; _lx_utm=utm_source%3DBaidu%26utm_medium%3Dorganic; _lxsdk_cuid=1687d804afec8-0d7c844cf56744-58422116-e1000-1687d804affc8; ci=1; rvct=1; iuuid=8AB76F6F1FA22EF7DF7FE4AA887B5C0EA007418F9EB7746517B1BA39AC88FA50; cityname=%E5%8C%97%E4%BA%AC; _lxsdk=8AB76F6F1FA22EF7DF7FE4AA887B5C0EA007418F9EB7746517B1BA39AC88FA50; hotel_city_id=1; hotel_city_info=%7B%22id%22%3A1%2C%22name%22%3A%22%E5%8C%97%E4%BA%AC%22%2C%22pinyin%22%3A%22beijing%22%7D; IJSESSIONID=4qavw61v8b4p15bxcuky9izxp; _lxsdk_s=1687e73978d-5e0-f90-856%7C%7C5");
 		return connect;
 	}
 	public static BaseFullResponse<Document> buildByUrl(String url,Map<String,String> parm,Map<String,String> herders,ProxyInfo info) {
-		Connection connect = JsoupUtil.connect(url,parm,herders).timeout(25000);
+		Connection connect = connect(url,parm,herders).timeout(30000);
 		if(info!=null) {
 			connect.proxy(info.getHost(), info.getPort());
 		}
+		JSONObject jsonObject = PROXYINFOTHREADLOCAL.get();
+		if(jsonObject!=null&&jsonObject.getString("cookie")!=null) {
+			connect.header("cookie", jsonObject.getString("cookie"));
+		}
 		Response execute;
 		try {
+			
 			execute = connect.execute();
 			Document parse = Jsoup.parse(execute.body());
+			
 			/*Elements eles = parse.select("meta[http-equiv=Content-Type]");
 			Iterator<Element> itor = eles.iterator();
 			String 

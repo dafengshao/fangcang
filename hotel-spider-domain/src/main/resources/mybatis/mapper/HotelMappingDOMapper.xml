@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fcang.spider.hotel.domain.mapper.HotelMappingDOMapper">
+
+
+	<!-- 通用查询结果列-->
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[
+			id,
+			ctrip_id AS ctripId,
+			meituan_id AS meituanId,
+			agoda_id AS agodaId,
+			alitrip_id AS alitripId,
+			booking_id AS bookingId,
+			dianping_id AS dianpingId,
+			elong_id AS elongId,
+			qunar_id AS qunarId,
+			tongcheng_id AS tongchengId,
+			tuniu_id AS tuniuId,
+			hotel_mapping_url AS hotelMappingUrl,
+			mark
+		]]>
+	</sql>
+
+	<!-- 查询列来源表 -->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM hotel_mapping]]></sql>
+
+
+
+	<!--全部条件(更多功能可以通过queryData扩展实现) -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+			<if test="id!=null "><![CDATA[AND id= #{id}]]></if>
+			<if test="ctripId!=null "><![CDATA[AND ctrip_id= #{ctripId}]]></if>
+			<if test="meituanId!=null "><![CDATA[AND meituan_id= #{meituanId}]]></if>
+			<if test="agodaId!=null "><![CDATA[AND agoda_id= #{agodaId}]]></if>
+			<if test="alitripId!=null "><![CDATA[AND alitrip_id= #{alitripId}]]></if>
+			<if test="bookingId!=null "><![CDATA[AND booking_id= #{bookingId}]]></if>
+			<if test="dianpingId!=null "><![CDATA[AND dianping_id= #{dianpingId}]]></if>
+			<if test="elongId!=null "><![CDATA[AND elong_id= #{elongId}]]></if>
+			<if test="qunarId!=null "><![CDATA[AND qunar_id= #{qunarId}]]></if>
+			<if test="tongchengId!=null "><![CDATA[AND tongcheng_id= #{tongchengId}]]></if>
+			<if test="tuniuId!=null "><![CDATA[AND tuniu_id= #{tuniuId}]]></if>
+			<if test="hotelMappingUrl!=null "><![CDATA[AND hotel_mapping_url= #{hotelMappingUrl}]]></if>
+			<if test="mark!=null "><![CDATA[AND mark= #{mark}]]></if>
+		</where>
+	</sql>
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->	<!-- 修 改-->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+			<if test="ctripId!=null"><![CDATA[ctrip_id = #{ctripId},]]></if>
+			<if test="meituanId!=null"><![CDATA[meituan_id = #{meituanId},]]></if>
+			<if test="agodaId!=null"><![CDATA[agoda_id = #{agodaId},]]></if>
+			<if test="alitripId!=null"><![CDATA[alitrip_id = #{alitripId},]]></if>
+			<if test="bookingId!=null"><![CDATA[booking_id = #{bookingId},]]></if>
+			<if test="dianpingId!=null"><![CDATA[dianping_id = #{dianpingId},]]></if>
+			<if test="elongId!=null"><![CDATA[elong_id = #{elongId},]]></if>
+			<if test="qunarId!=null"><![CDATA[qunar_id = #{qunarId},]]></if>
+			<if test="tongchengId!=null"><![CDATA[tongcheng_id = #{tongchengId},]]></if>
+			<if test="tuniuId!=null"><![CDATA[tuniu_id = #{tuniuId},]]></if>
+			<if test="hotelMappingUrl!=null"><![CDATA[hotel_mapping_url = #{hotelMappingUrl},]]></if>
+			<if test="mark!=null"><![CDATA[mark = #{mark},]]></if>
+		</set>
+	</sql>
+	<!-- 插入记录 -->
+	<insert id="insertSelective" parameterType="hotelMappingDO" useGeneratedKeys="true" keyProperty="id">
+			INSERT INTO hotel_mapping
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="ctripId!=null">ctrip_id,</if>
+				<if test="meituanId!=null">meituan_id,</if>
+				<if test="agodaId!=null">agoda_id,</if>
+				<if test="alitripId!=null">alitrip_id,</if>
+				<if test="bookingId!=null">booking_id,</if>
+				<if test="dianpingId!=null">dianping_id,</if>
+				<if test="elongId!=null">elong_id,</if>
+				<if test="qunarId!=null">qunar_id,</if>
+				<if test="tongchengId!=null">tongcheng_id,</if>
+				<if test="tuniuId!=null">tuniu_id,</if>
+				<if test="hotelMappingUrl!=null">hotel_mapping_url,</if>
+				<if test="mark!=null">mark,</if>
+			</trim>
+			<trim prefix="values (" suffix=")" suffixOverrides=",">
+				<if test="ctripId!=null">#{ctripId},</if>
+				<if test="meituanId!=null">#{meituanId},</if>
+				<if test="agodaId!=null">#{agodaId},</if>
+				<if test="alitripId!=null">#{alitripId},</if>
+				<if test="bookingId!=null">#{bookingId},</if>
+				<if test="dianpingId!=null">#{dianpingId},</if>
+				<if test="elongId!=null">#{elongId},</if>
+				<if test="qunarId!=null">#{qunarId},</if>
+				<if test="tongchengId!=null">#{tongchengId},</if>
+				<if test="tuniuId!=null">#{tuniuId},</if>
+				<if test="hotelMappingUrl!=null">#{hotelMappingUrl},</if>
+				<if test="mark!=null">#{mark},</if>
+			</trim>
+	</insert>
+
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 删除记录,主键IN(array)  -->
+	<delete id="deleteByArrayKey" parameterType="java.lang.reflect.Array">
+		 <![CDATA[DELETE FROM hotel_mapping  WHERE id IN]]>
+		 <foreach collection="array" item="id" open="(" separator="," close=")">
+			 <![CDATA[#{id}]]>
+		</foreach>
+	</delete>
+
+	<!--删除,通过条件-->
+	<delete id="deleteByCondtion" parameterType="hotelMappingDO">
+		<![CDATA[DELETE FROM hotel_mapping]]>
+			<include refid="QUERY_WHERE_CLAUSE"/>
+	</delete>
+
+	<!--删除,通过主键-->
+	<delete id="deleteByPrimaryKey" parameterType="hotelMappingDO">
+		 <![CDATA[DELETE FROM hotel_mapping  WHERE id = #{id}]]>
+	</delete>
+
+	<!--修改记录通过主键-->
+	<update id="updateByPrimaryKeySelective" parameterType="hotelMappingDO">
+		<![CDATA[UPDATE hotel_mapping]]>
+			<include refid="UPDATE_COLUMN_SET"/>
+			<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键==(key) -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long" resultType="hotelMappingDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id =#{id}]]>
+	</select>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectEntryArray" parameterType="java.lang.reflect.Array" resultType="hotelMappingDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="array" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectEntryList" parameterType="hotelMappingDO" resultType="hotelMappingDO">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+	<!-- 总数查询,通过条件-->
+	<select id="selectEntryListCount" parameterType="hotelMappingDO" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+
+
+</mapper>

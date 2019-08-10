@@ -37,6 +37,7 @@ public class CtripHotelInfoServiceImpl extends BaseServiceImpl<CtripHotelInfoDO,
 	@Override
 	public int insertSelective(CtripHotelInfoDO t) {
 		t.setCreateTime(new Date());
+		t.setUpdateTime(new Date());
 		return super.insertSelective(t);
 	}
 	

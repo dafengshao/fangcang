@@ -35,7 +35,7 @@ public class MyBatis2Java {
 	
 
     private final Set<String> tableSet= new HashSet<>(Arrays.asList(
-    		"meituan_hotel_detail"
+    		"hotel_mapping"
     		)
 		);
     
